@@ -2597,14 +2597,14 @@ footer {
 
 <script>
 const DATA = {
-  meta:{ updatedAt:"01.06.2026 09:00", rotateSec:30, source:"PMO_Portfolio_Master_v7.xlsx", version:"v2.9" },
+  meta:{ updatedAt:"01.06.2026 11:00", rotateSec:30, source:"PMO_Portfolio_Master_v7.xlsx", version:"v2.9" },
 
   // EV/AC/PV из 01_Проекты v7. У 3 проектов EV без PV: Shuttle Coaster, Double Heart, Доработка кассовых зон
   health:{ spi:3.57, cpi:3.55, eac:586.0, cv:1186.8, ev:1652.9, ac:466.1, pv:462.9, bac:2080.4,
     dataIssue:"У 3 проектов EV без PV — портфельный SPI/CPI искажён" },
 
   portfolio:{
-    total:30, active:17, suspended:4, strategic:6, backlog:9, completed:0,
+    total:30, active:17, suspended:4, strategic:6, backlog:34, completed:0,
     budgetMln:2080.4, avgPct:47,
     reserveTotal:96.4, reserveBound:42.7, reserveRealized:6.0, reserveReleased:6.9, reserveFree:47.7,
     rag:{ ahead:0, ontime:13, risky:1, late:2, noData:1 },
@@ -2770,6 +2770,31 @@ const DATA = {
     { id:23, name:"Оформление сцены", pm:"М. Киселёв", type:"Инфраструктура", priority:"P4", bsc:"Клиенты" },
     { id:24, name:"Освещение в парке", pm:"М. Киселёв", type:"Инфраструктура", priority:"P4", bsc:"Операции" },
     { id:25, name:"Карта парка DWG (актуализация)", pm:"М. Киселёв", type:"Инфраструктура", priority:"P4", bsc:"Операции" },
+    { id:31, name:"Проработка открытой зоны с Альпака", pm:"", type:"Аттракцион", priority:"P4", bsc:"Клиенты", note:"Проработка концепции интерактивной зоны с альпаками" },
+    { id:32, name:"Паровая железная дорога (Vintage Trains)", pm:"", type:"Аттракцион", priority:"P4", bsc:"Клиенты", note:"Миниатюрная паровая ж/д. Vintage Trains, Китай (Wang Dun, Quzhou, Zhejiang). Контакт: +86 18767006711, www.vintage-trains.com" },
+    { id:33, name:"Декоративный аквариум с аровановыми (Founder Ocean)", pm:"", type:"Аттракцион", priority:"P4", bsc:"Клиенты", note:"Декоративный аквариум с арованой. Founder Ocean Technology, Китай (Weihai, Shandong). www.fdocean.com" },
+    { id:34, name:"Аттракцион «Прыжок с парашютом» Fun Skydiving", pm:"", type:"Аттракцион", priority:"P4", bsc:"Клиенты", note:"Fun Skydiving. Seama Amusement, Китай (Zhongshan GD, Echo). Контакт: +8613549872128, www.seama-yl.com" },
+    { id:35, name:"Картинг / бамперные машины (Anchi)", pm:"", type:"Аттракцион", priority:"P4", bsc:"Клиенты", note:"Картинг и бамперные машины. Anchi Amusement, Китай (Amy Lee, Guangzhou)" },
+    { id:36, name:"Светодиодная инсталляция «Дракон» (Caiden)", pm:"", type:"Инфраструктура", priority:"P4", bsc:"Клиенты", note:"Светодиодный дракон и декоративные инсталляции. 麦吉彩灯 (Caiden), Китай" },
+    { id:37, name:"Детский мягкий игровой комплекс / батуты (童瑞)", pm:"", type:"Аттракцион", priority:"P4", bsc:"Клиенты", note:"ДРЦ-формат: батуты и мягкий комплекс. 广州童瑞 (Тун Жуй), Китай (Claudia, Guangzhou)" },
+    { id:38, name:"Голографический картинг HoloBattleKart", pm:"", type:"Аттракцион", priority:"P4", bsc:"Клиенты", note:"AR-картинг с голографическим полом. GUWEI ANIMATION, Китай" },
+    { id:39, name:"Детский игровой комплекс под ключ (Funlandia)", pm:"", type:"Аттракцион", priority:"P4", bsc:"Клиенты", note:"Детский игровой комплекс под ключ. Funlandia, Китай (李佳欣, Shanghai). www.funlandia.cn" },
+    { id:40, name:"Многоформатный детский центр YiFun Life", pm:"", type:"Аттракцион", priority:"P4", bsc:"Клиенты", note:"Аэропорт-формат и другие форматы ДРЦ. YiFun Life, Китай (Winnie Wu)" },
+    { id:41, name:"Надувной / мягкий комплекс Hip-Hop (凯发)", pm:"", type:"Аттракцион", priority:"P4", bsc:"Клиенты", note:"Надувные горки и мягкий комплекс. 凯发 Hip-Hop Amusement, Китай (Grace Huang, Guangzhou)" },
+    { id:42, name:"Аттракцион «Городские Герои» (中山腾龙)", pm:"", type:"Аттракцион", priority:"P4", bsc:"Клиенты", note:"Интерактивный аттракцион «Городские Герои», 13 кВт. 中山腾龙, Китай" },
+    { id:43, name:"Аттракцион-робот / ДРЦ (Beslepark)", pm:"", type:"Аттракцион", priority:"P4", bsc:"Клиенты", note:"Аттракцион-робот и ДРЦ-формат. Beslepark / Fountain, Китай" },
+    { id:44, name:"Уличная лазилка зачётная (MIZONE)", pm:"", type:"Аттракцион", priority:"P4", bsc:"Клиенты", note:"Уличный скалодром/лазилка. MIZONE, Китай (Kala Zhang, Sales Manager)" },
+    { id:45, name:"XR-симуляторы и интерактивные театры (Funnico)", pm:"", type:"Аттракцион", priority:"P4", bsc:"Клиенты", note:"All-in-One XR: VR симуляторы, eSports, XR Digital Courses. Funnico (Juana Yang, +86 13211341462, jyang@funnico.com, www.funni-co.com)" },
+    { id:46, name:"VR-парк под ключ (HeroVR)", pm:"", type:"Аттракцион", priority:"P4", bsc:"Клиенты", note:"VR Theme Park Turnkey Solution. HeroVR / VFH Media Technology (Vivian Su, +86 19905781150, vivian@vrtherozone.com, www.vtherozone.com, Guangzhou)" },
+    { id:47, name:"Купольный кинотеатр 8 чел. + шаровой LED (康硕展)", pm:"", type:"Аттракцион", priority:"P4", bsc:"Клиенты", note:"8-Person Dome Suspended Flight Theater (7.9×6.7м, до 36 чел в большой версии) + сферический LED-экран. 康硕展电子设备有限公司, Шэньчжэнь (+400-689-9999, www.ksdzh.com)" },
+    { id:48, name:"Иммерсивный VR-кинотеатр (视觉坐标)", pm:"", type:"Аттракцион", priority:"P4", bsc:"Клиенты", note:"Иммерсивный кинозал и VR-театр. 北京中视坐标影文化有限公司 (Wang Lei, +86 18610623683, zhongshizhiyingli@163.com, Пекин)" },
+    { id:49, name:"VR-кабина с гибким LED-экраном (Oculeap)", pm:"", type:"Аттракцион", priority:"P4", bsc:"Клиенты", note:"VR-кабина + гибкий LED-экран, ~135 тыс $. Oculeap (Bowen Tian, +86 13900038849, www.oculeap.com, Panyu District, Guangzhou)" },
+    { id:50, name:"Иммерсивный симулятор под ключ (Dinfone)", pm:"", type:"Аттракцион", priority:"P4", bsc:"Клиенты", note:"Крупный симулятор / иммерсивный театр, ~130 тыс $. 巅峰文化科技股份有限公司 Dinfone Culture (音裕, +86 13632100165)" },
+    { id:51, name:"Детские аттракционы для сафари (广州珑昇 + 华瑞)", pm:"", type:"Аттракцион", priority:"P4", bsc:"Клиенты", note:"Детские машинки и мотоциклы для зоны Сафари. 广州珑昇电子科技 (朱珊珊, +86 138-3249-5430); 广州华瑞游乐设备 (何文妥, +86 159-8639-4476, www.fnd86.com)" },
+    { id:52, name:"Автоматы и вендинг (Jiuyou Animation)", pm:"", type:"Аттракцион", priority:"P4", bsc:"Клиенты", note:"Игровые автоматы (однорукие бандиты) и вендинг. Guangzhou Jiuyou Animation Technology (Lucas Hong, +86 13600504204, lucas@gjyfc.com, www.gjyfc.com, Panyu, Guangzhou)" },
+    { id:53, name:"Система контроля доступа и кассы (Baodian Digital)", pm:"", type:"Инфраструктура", priority:"P4", bsc:"Операции", note:"RFID Card System: турникеты, считыватели, авто-кассы. Baodian Digital Technology (Chris Kong, +86 191 2058 5558, www.bdszh.com). Юрий: «выглядит хорошо»" },
+    { id:54, name:"Гоночные симуляторы (Carson)", pm:"", type:"Аттракцион", priority:"P4", bsc:"Клиенты", note:"Motion Racing Simulators, 14 лет опыта. 广州卡尔森信息科技 Carson Digital Technology (Jason, +86 177-2291-3518, Guangzhou)" },
+    { id:55, name:"VR-горка (MoviePower)", pm:"", type:"Аттракцион", priority:"P4", bsc:"Клиенты", note:"VR roller coaster и динозавр-аттракцион. Guangzhou Movie Power Technology (Kevin, +86 136-788-6173)" },
   ]
 };
 
