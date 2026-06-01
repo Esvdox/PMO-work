@@ -2244,6 +2244,38 @@ footer {
 .ph-proj-name { font-size: 14px; font-weight: 700; color: var(--t1); flex: 1; }
 .ph-proj-pm   { font-size: 12px; color: var(--t3); }
 .ph-modal-empty { color: var(--t3); font-style: italic; font-size: 14px; padding: .4rem; }
+
+/* ── Collapse toggle для секции PM ── */
+.pm-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  margin-top: .8rem;
+  padding: .4rem 1rem .4rem .7rem;
+  background: var(--bg-3);
+  border: 1px solid var(--ln);
+  border-radius: 2rem;
+  cursor: pointer;
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: var(--t2);
+  transition: background .15s, color .15s;
+  user-select: none;
+}
+.pm-toggle-btn:hover { background: var(--ln); color: var(--t1); }
+.pm-toggle-btn svg {
+  transition: transform .25s ease;
+  flex-shrink: 0;
+}
+.pm-section.collapsed .pm-toggle-btn svg { transform: rotate(-90deg); }
+.pm-projects-wrap {
+  overflow: hidden;
+  transition: max-height .3s ease, opacity .25s ease;
+}
+.pm-section.collapsed .pm-projects-wrap {
+  max-height: 0 !important;
+  opacity: 0;
+}
 </style>
 </head>
 <body>
@@ -3042,6 +3074,25 @@ function renderTimeline(){
   el.innerHTML = `<div class="tl-axis-track"><div class="tl-axis-line"></div>${nodes}</div>`;
 }
 
+
+// ── Collapse/expand PM section ──
+function togglePmSection(btn) {
+  const section = btn.closest('.pm-section');
+  const label = btn.querySelector('.pm-toggle-label');
+  const wrap = section.querySelector('.pm-projects-wrap');
+  const isCollapsed = section.classList.toggle('collapsed');
+  label.textContent = isCollapsed ? 'развернуть' : 'свернуть';
+  if (!isCollapsed) {
+    // Re-measure for smooth expand
+    wrap.style.maxHeight = wrap.scrollHeight + 'px';
+    wrap.addEventListener('transitionend', () => { wrap.style.maxHeight = '9999px'; }, {once:true});
+  } else {
+    // Snap to current height first, then collapse
+    wrap.style.maxHeight = wrap.scrollHeight + 'px';
+    requestAnimationFrame(() => { wrap.style.maxHeight = '0'; });
+  }
+}
+
 // ── РЕНДЕР: Секции PM ──
 function renderPmSections(){
   const el = document.getElementById('pm-sections');
@@ -3129,6 +3180,10 @@ function renderPmSections(){
           </div>
           <div class="pm-info">
             <div class="pm-name">${esc(pm.name)}</div>
+            <button class="pm-toggle-btn" onclick="togglePmSection(this)" aria-label="Свернуть/развернуть проекты">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 4.5L7 9.5L12 4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span class="pm-toggle-label">свернуть</span>
+            </button>
           </div>
         </div>
 
@@ -3151,8 +3206,10 @@ function renderPmSections(){
           </div>
         </div>
 
-        <div class="pm-projects">
-          ${projHtml}
+        <div class="pm-projects-wrap" style="max-height: 9999px; opacity: 1;">
+          <div class="pm-projects">
+            ${projHtml}
+          </div>
         </div>
       </div>
     `;
