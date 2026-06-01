@@ -3258,10 +3258,38 @@ function renderPmSections(){
 // ── РЕНДЕР: Матрицы рисков ──
 function renderRiskMatrices(){
   const el = document.getElementById('risk-matrices');
-  // Только активные (не backlog) — берём из risksMatrices, фильтруем
-  const matrices = (DATA.risksMatrices || []).filter(m => !m.isBacklog);
+  const pmNames = {};
+  (DATA.managers || []).forEach(m => { pmNames[m.id] = m.name; });
 
-  el.innerHTML = matrices.map(p => {
+  const projs = allProjects().filter(p => p.status === 'Активный' || p.status === 'Приостановлен');
+  const cards = projs.map(proj => {
+    const det = PROJECTS_DETAIL[proj.id];
+    if(!det) return null;
+    const risks = det.risks_top || [];
+    if(det.risks_total === 0 && risks.length === 0) return null;
+
+    const activeR    = risks.filter(r => r.status === 'Активный').length;
+    const identified = risks.filter(r => r.status === 'Идентифицирован').length;
+    const burned     = risks.filter(r => r.status === 'Сгорел').length;
+    const realized   = risks.filter(r => r.status === 'Реализован').length;
+    const reserve    = risks.filter(r => r.status === 'Активный').reduce((s,r) => s + (r.reserve||0), 0);
+
+    const mx = Array.from({length:5}, () => Array(5).fill(0));
+    risks.forEach(r => {
+      if(r.p && r.i && r.status !== 'Сгорел' && r.status !== 'Реализован'){
+        const row = 5 - r.p, col = r.i - 1;
+        if(row >= 0 && row < 5 && col >= 0 && col < 5) mx[row][col]++;
+      }
+    });
+
+    const pm = pmNames[det.pm_id] || det.pm_fio || '';
+    const isSusp = proj.status === 'Приостановлен';
+    return { pm, name:proj.name, isSusp, activeR, identified, burned, realized, reserve, mx };
+  }).filter(Boolean);
+
+  cards.sort((a,b) => b.reserve - a.reserve);
+
+  el.innerHTML = cards.map(p => {
     let cells = '<div class="hm-ax"></div>';
     for(let i=1; i<=5; i++) cells += `<div class="hm-ax">I${i}</div>`;
     for(let row=0; row<5; row++){
@@ -3276,19 +3304,17 @@ function renderRiskMatrices(){
         cells += `<div class="hm-cell ${cl}">${cnt>0 ? cnt : ''}</div>`;
       }
     }
-
-    const isCritical = p.active >= 3;
-    const isSusp = p.isSuspended;
+    const isCritical = p.activeR >= 3;
     return `
-      <div class="risk-card${isCritical?' critical':''}${isSusp?' is-suspended':''}">
+      <div class="risk-card${isCritical?' critical':''}${p.isSusp?' is-suspended':''}">
         <div class="rc-pm">${esc(p.pm)}</div>
         <div class="rc-name">${esc(p.name)}</div>
         <div class="hm">${cells}</div>
         <div class="rc-stats">
           <div class="rc-stat"><span class="rc-stat-l">Идентиф.</span><span class="rc-stat-v">${p.identified||0}</span></div>
-          <div class="rc-stat"><span class="rc-stat-l">Активных</span><span class="rc-stat-v ${p.active>=3?'red':(p.active>=1?'amber':'green')}">${p.active}</span></div>
+          <div class="rc-stat"><span class="rc-stat-l">Активных</span><span class="rc-stat-v ${p.activeR>=3?'red':(p.activeR>=1?'amber':'green')}">${p.activeR}</span></div>
           <div class="rc-stat"><span class="rc-stat-l">Сгор./реализ.</span><span class="rc-stat-v"><span class="green">${p.burned}</span>/<span class="red">${p.realized}</span></span></div>
-          <div class="rc-stat"><span class="rc-stat-l">Резерв</span><span class="rc-stat-v">${p.res.toLocaleString('ru',{maximumFractionDigits:1})} млн</span></div>
+          <div class="rc-stat"><span class="rc-stat-l">Резерв</span><span class="rc-stat-v">${p.reserve.toLocaleString('ru',{maximumFractionDigits:1})} млн</span></div>
         </div>
       </div>
     `;
@@ -3298,7 +3324,21 @@ function renderRiskMatrices(){
 // ── РЕНДЕР: Топ-5 рисков ──
 function renderTopRisks(){
   const el = document.getElementById('top-risks');
-  el.innerHTML = DATA.topRisks.map(r => `
+  // Собираем все риски из PROJECTS_DETAIL активных проектов
+  const active = allProjects().filter(p => p.status === 'Активный');
+  const allRisks = [];
+  active.forEach(proj => {
+    const det = PROJECTS_DETAIL[proj.id];
+    if(!det) return;
+    (det.risks_top||[]).forEach(r => {
+      if(r.emv && r.emv > 0 && r.status !== 'Сгорел' && r.status !== 'Реализован'){
+        allRisks.push({ proj:proj.name, score:r.score, lbl:r.desc, emv:r.emv });
+      }
+    });
+  });
+  allRisks.sort((a,b) => b.emv - a.emv);
+  const top5 = allRisks.slice(0,5);
+  el.innerHTML = top5.map(r => `
     <div class="top-risk">
       <div class="tr-head">
         <span class="tr-score">${r.score}</span>
@@ -4182,37 +4222,4 @@ function phModalOpen(key, label) {
   document.getElementById('ph-modal-title').textContent = label;
   const n = projs.length;
   document.getElementById('ph-modal-count').textContent =
-    n + ' проект' + (n===1?'':n<5?'а':'ов');
-  document.getElementById('ph-modal-body').innerHTML = n === 0
-    ? '<div class="ph-modal-empty">Нет проектов в этой фазе</div>'
-    : projs.map(p => {
-        const pm = (p.pm_fio||p.pm||'').split(' ').pop();
-        return `<div class="ph-proj-row" onclick="phModalClose();openDetail(${p.id})">
-          <span class="ph-proj-dot" style="background:${ragCol(p.rag)}"></span>
-          <span class="ph-proj-name">${esc(p.name)}</span>
-          <span class="ph-proj-pm">${esc(pm)}</span>
-        </div>`;
-      }).join('');
-  document.getElementById('ph-modal-ov').classList.add('open');
-}
-function phModalClose() {
-  document.getElementById('ph-modal-ov').classList.remove('open');
-}
-document.addEventListener('keydown', e => { if(e.key==='Escape') phModalClose(); });
-
-</script>
-
-<!-- Phase drill-down modal -->
-<div class="ph-modal-ov" id="ph-modal-ov" onclick="if(event.target===this)phModalClose()">
-  <div class="ph-modal">
-    <div class="ph-modal-head">
-      <span class="ph-modal-title" id="ph-modal-title"></span>
-      <span class="ph-modal-count" id="ph-modal-count"></span>
-      <button class="ph-modal-close" onclick="phModalClose()">✕</button>
-    </div>
-    <div id="ph-modal-body"></div>
-  </div>
-</div>
-
-</body>
-</html>
+    n + ' проект' + (n===1?'':n<5?'а':'ов
