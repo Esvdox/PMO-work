@@ -3324,21 +3324,7 @@ function renderRiskMatrices(){
 // ── РЕНДЕР: Топ-5 рисков ──
 function renderTopRisks(){
   const el = document.getElementById('top-risks');
-  // Собираем все риски из PROJECTS_DETAIL активных проектов
-  const active = allProjects().filter(p => p.status === 'Активный');
-  const allRisks = [];
-  active.forEach(proj => {
-    const det = PROJECTS_DETAIL[proj.id];
-    if(!det) return;
-    (det.risks_top||[]).forEach(r => {
-      if(r.emv && r.emv > 0 && r.status !== 'Сгорел' && r.status !== 'Реализован'){
-        allRisks.push({ proj:proj.name, score:r.score, lbl:r.desc, emv:r.emv });
-      }
-    });
-  });
-  allRisks.sort((a,b) => b.emv - a.emv);
-  const top5 = allRisks.slice(0,5);
-  el.innerHTML = top5.map(r => `
+  el.innerHTML = DATA.topRisks.map(r => `
     <div class="top-risk">
       <div class="tr-head">
         <span class="tr-score">${r.score}</span>
@@ -4222,4 +4208,37 @@ function phModalOpen(key, label) {
   document.getElementById('ph-modal-title').textContent = label;
   const n = projs.length;
   document.getElementById('ph-modal-count').textContent =
-    n + ' проект' + (n===1?'':n<5?'а':'ов
+    n + ' проект' + (n===1?'':n<5?'а':'ов');
+  document.getElementById('ph-modal-body').innerHTML = n === 0
+    ? '<div class="ph-modal-empty">Нет проектов в этой фазе</div>'
+    : projs.map(p => {
+        const pm = (p.pm_fio||p.pm||'').split(' ').pop();
+        return `<div class="ph-proj-row" onclick="phModalClose();openDetail(${p.id})">
+          <span class="ph-proj-dot" style="background:${ragCol(p.rag)}"></span>
+          <span class="ph-proj-name">${esc(p.name)}</span>
+          <span class="ph-proj-pm">${esc(pm)}</span>
+        </div>`;
+      }).join('');
+  document.getElementById('ph-modal-ov').classList.add('open');
+}
+function phModalClose() {
+  document.getElementById('ph-modal-ov').classList.remove('open');
+}
+document.addEventListener('keydown', e => { if(e.key==='Escape') phModalClose(); });
+
+</script>
+
+<!-- Phase drill-down modal -->
+<div class="ph-modal-ov" id="ph-modal-ov" onclick="if(event.target===this)phModalClose()">
+  <div class="ph-modal">
+    <div class="ph-modal-head">
+      <span class="ph-modal-title" id="ph-modal-title"></span>
+      <span class="ph-modal-count" id="ph-modal-count"></span>
+      <button class="ph-modal-close" onclick="phModalClose()">✕</button>
+    </div>
+    <div id="ph-modal-body"></div>
+  </div>
+</div>
+
+</body>
+</html>
