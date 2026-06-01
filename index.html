@@ -2297,7 +2297,7 @@ footer {
     <a class="sb-link active" data-view="portfolio" href="#/portfolio">
       <span class="sb-ico">📊</span>
       <span class="sb-label">Портфель проектов</span>
-      <span class="sb-badge" id="sb-badge-portfolio">17</span>
+      <span class="sb-badge" id="sb-badge-portfolio">18</span>
     </a>
     <a class="sb-link" data-view="initiatives" href="#/initiatives">
       <span class="sb-ico">💡</span>
@@ -2693,7 +2693,7 @@ const DATA = {
     total:30, active:17, suspended:4, strategic:6, backlog:34, completed:0,
     budgetMln:2080.4, avgPct:47,
     reserveTotal:96.4, reserveBound:42.7, reserveRealized:6.0, reserveReleased:6.9, reserveFree:47.7,
-    rag:{ ahead:0, ontime:13, risky:1, late:2, noData:1 },
+    rag:{ ahead:0, ontime:11, risky:2, late:4, noData:1 },
     completeness:{
       noBudget:5, noStart:2, noAC:4, noPct:2, avgCard:0.87,
       evWithoutPv:3
@@ -2998,7 +2998,15 @@ function renderHealth(){
 
 // ── РЕНДЕР: RAG-waffle ──
 function renderRag(){
-  const r = DATA.portfolio.rag;
+  // Вычисляем RAG динамически из активных проектов
+  const active = allProjects().filter(p => p.status === 'Активный');
+  const r = {
+    ahead:  active.filter(p => p.rag === 'ahead').length,
+    ontime: active.filter(p => p.rag === 'ontime').length,
+    risky:  active.filter(p => p.rag === 'risky').length,
+    late:   active.filter(p => p.rag === 'late').length,
+    noData: active.filter(p => !p.rag || p.rag === 'no-data').length,
+  };
   const wEl = document.getElementById('rag-waffle');
   const lEl = document.getElementById('rag-legend');
 
