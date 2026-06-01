@@ -636,60 +636,79 @@ section + section {
 /* Timeline ближайших запусков — горизонтальная ось */
 .tl-list { overflow-x: auto; padding-bottom: 4px; }
 .tl-axis-track {
-  display: flex;
-  align-items: flex-end;
-  min-width: 560px;
   position: relative;
-  padding-bottom: 16px;
-  padding-top: 6px;
-  gap: 0;
+  min-width: 560px;
+  height: 240px;   /* фиксированная высота: 110px выше оси + 2px ось + 128px ниже */
+  padding: 0 12px;
 }
 .tl-axis-line {
   position: absolute;
-  bottom: 21px;
-  left: 16px;
-  right: 16px;
+  top: 112px;      /* ось на 112px от верха */
+  left: 12px; right: 12px;
   height: 2px;
-  background: rgba(91,168,214,.2);
+  background: rgba(91,168,214,.5);
   border-radius: 1px;
   z-index: 0;
 }
+/* Стрелка-конец оси */
+.tl-axis-line::after {
+  content: '';
+  position: absolute;
+  right: -6px; top: -4px;
+  border-left: 8px solid rgba(91,168,214,.5);
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+}
 .tl-node {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  position: relative;
+  position: absolute;
+  top: 0; bottom: 0;
+  width: 88px;
+  transform: translateX(-50%);
   z-index: 1;
 }
-.tl-node.tl-alt { justify-content: flex-start; padding-top: 0; }
+/* Точка — всегда точно на оси (центр = 113px от top) */
+.tl-dot {
+  position: absolute;
+  top: 108px;      /* 113 − 5 = 108 */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: var(--sky);
+  border: 2px solid var(--bg-1);
+  box-shadow: 0 0 0 2px var(--sky);
+  z-index: 2;
+}
+.tl-dot.tl-urgent { background: var(--bad); box-shadow: 0 0 0 2px var(--bad); }
+.tl-dot.tl-soon   { background: var(--warn); box-shadow: 0 0 0 2px var(--warn); }
+/* Карточки */
 .tl-card {
+  position: absolute;
   background: var(--bg-2);
   border: 1px solid var(--ln);
   border-radius: .75rem;
   padding: 6px 7px;
   text-align: center;
   width: 80px;
+  left: 50%;
+  transform: translateX(-50%);
   box-shadow: var(--shadow-1);
-  margin-bottom: 5px;
 }
-.tl-node.tl-alt .tl-card { margin-bottom: 0; margin-top: 5px; order: 3; }
-.tl-node.tl-alt .tl-dot  { order: 1; margin-bottom: 0; margin-top: 0; }
-.tl-node.tl-alt .tl-stem { order: 2; }
-.tl-stem { width: 2px; height: 10px; background: rgba(91,168,214,.25); flex-shrink: 0; }
-.tl-node.tl-alt .tl-stem { background: rgba(31,27,22,.10); }
-.tl-dot {
-  width: 10px; height: 10px;
-  border-radius: 50%;
-  background: var(--sky);
-  border: 2px solid var(--bg-1);
-  box-shadow: 0 0 0 2px var(--sky);
-  flex-shrink: 0;
-  margin-bottom: 16px;
+/* Нечётные (чётный индекс) — карточка над осью */
+.tl-node:not(.tl-alt) .tl-card { bottom: 136px; }  /* нижний край = 240−136=104px от top, т.е. 9px над точкой */
+/* Чётные (нечётный индекс) — карточка под осью */
+.tl-node.tl-alt .tl-card        { top: 128px; }     /* верхний край = 128px от top, 10px под точкой */
+/* Стебли */
+.tl-stem {
+  position: absolute;
+  width: 2px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(91,168,214,.35);
+  z-index: 1;
 }
-.tl-node.tl-alt .tl-dot { margin-bottom: 0; margin-top: 16px; }
-.tl-dot.tl-urgent { background: var(--bad); box-shadow: 0 0 0 2px var(--bad); }
-.tl-dot.tl-soon   { background: var(--warn); box-shadow: 0 0 0 2px var(--warn); }
+.tl-node:not(.tl-alt) .tl-stem { bottom: 118px; height: 18px; } /* от 240−118−18=104px до 240−118=122px от top */
+.tl-node.tl-alt    .tl-stem    { top: 118px;    height: 10px; } /* от 118 до 128px от top */
 .tl-date { font-size: 13px; font-weight: 800; color: var(--t1); line-height: 1; }
 .tl-days { font-size: 10px; color: var(--t3); margin-top: 2px; }
 .tl-name { font-size: 10px; font-weight: 700; color: var(--t1); line-height: 1.3; margin-top: 3px; }
@@ -2967,10 +2986,12 @@ function renderTimeline(){
     return;
   }
   const urgCls = d => d <= 5 ? ' tl-urgent' : d <= 14 ? ' tl-soon' : '';
+  const n = sorted.length;
+  // Равномерно расставляем узлы от 8% до 92% ширины контейнера
   const nodes = sorted.map((t, i) => {
     const alt = i % 2 === 1;
-    return `
-    <div class="tl-node${alt?' tl-alt':''}">
+    const pct = n === 1 ? 50 : 8 + (i / (n - 1)) * 84;
+    return `<div class="tl-node${alt?' tl-alt':''}" style="left:${pct.toFixed(1)}%">
       <div class="tl-card">
         <div class="tl-date">${esc(t.date)}</div>
         <div class="tl-days">через ${t.daysLeft} дн.</div>
@@ -3988,37 +4009,4 @@ renderTable();
 renderFunnel();
 renderInitiatives();
 renderFilterChips();
-renderBacklogFull();
-bindFilters();
-
-// Sidebar навигация
-document.querySelectorAll('.sb-link').forEach(a => {
-  a.addEventListener('click', e => {
-    e.preventDefault();
-    const view = a.dataset.view;
-    location.hash = '#/' + view;
-    switchView(view);
-  });
-});
-window.addEventListener('hashchange', handleHashRoute);
-handleHashRoute();
-
-// Модалка
-document.getElementById('btn-new-init').addEventListener('click', openInitModal);
-document.getElementById('modal-close').addEventListener('click', closeInitModal);
-document.getElementById('btn-cancel').addEventListener('click', closeInitModal);
-document.getElementById('btn-save-init').addEventListener('click', saveNewInit);
-document.getElementById('modal-init').addEventListener('click', e => {
-  if(e.target.id === 'modal-init') closeInitModal();
-});
-
-// Клик по строке таблицы детального свода → страница проекта
-document.addEventListener('click', e => {
-  const row = e.target.closest('.dt-row');
-  if(row && row.dataset.pid){
-    location.hash = '#/project/' + row.dataset.pid;
-  }
-});
-</script>
-</body>
-</html>
+render
