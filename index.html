@@ -1444,55 +1444,39 @@ footer {
 }
 #bl-reset { align-self: flex-start; margin-top: .3rem; }
 
-.backlog-grid-full {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(22rem, 1fr));
-  gap: var(--sp-2);
-}
-.bcf-card {
-  background: var(--bg-2);
-  border: 1px solid var(--ln);
-  border-left: 4px solid var(--lavender);
-  border-radius: 1.1rem;
-  padding: 1.3rem 1.4rem;
-  box-shadow: var(--shadow-1);
-  transition: all .15s ease;
-}
-.bcf-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-lavender); }
-.bcf-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: .5rem; }
-.bcf-id {
-  font-size: 13px;
-  font-weight: 800;
-  color: var(--lavender-2);
-  background: rgba(176,132,204,.12);
-  padding: .2rem .55rem;
-  border-radius: .35rem;
-}
-.bcf-priority {
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--lavender-2);
-  text-transform: uppercase;
-  letter-spacing: .04em;
-}
-.bcf-name { font-size: var(--fs-base); font-weight: 800; color: var(--t1); margin-bottom: .9rem; line-height: 1.3; }
-.bcf-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: .5rem .8rem;
-  font-size: 13px;
-}
-.bcf-cell-lbl { color: var(--t3); text-transform: uppercase; letter-spacing: .04em; font-weight: 600; }
-.bcf-cell-val { color: var(--t1); font-weight: 700; margin-top: .1rem; }
-.bcf-empty {
-  grid-column: 1 / -1;
-  background: var(--bg-2);
-  border: 2px dashed var(--ln2);
-  border-radius: 1.2rem;
-  padding: var(--sp-4);
-  text-align: center;
-  color: var(--t3);
-}
+.bl-tbl-outer { width:100%; overflow-x:auto; border:1px solid var(--ln2); border-radius:1.1rem; background:var(--bg-2); }
+.bl-tbl { width:100%; border-collapse:collapse; table-layout:fixed; }
+.bl-tbl thead th { background:var(--bg-3); font-size:12px; font-weight:700; color:var(--t3); text-transform:uppercase; letter-spacing:.05em; padding:10px 12px; border-bottom:1px solid var(--ln2); white-space:nowrap; cursor:pointer; user-select:none; }
+.bl-tbl thead th:hover { color:var(--t1); }
+.bl-tbl thead th.bl-sorted { color:var(--lavender-2); }
+.bl-tbl tbody tr { border-bottom:1px solid var(--ln); transition:background .1s; }
+.bl-tbl tbody tr:last-child { border-bottom:none; }
+.bl-tbl tbody tr:hover { background:var(--bg-3); }
+.bl-tbl td { padding:8px 12px; vertical-align:middle; line-height:1.4; }
+.bl-col-id   { width:52px; }
+.bl-col-name { width:auto; }
+.bl-col-type { width:118px; }
+.bl-col-bsc  { width:92px; }
+.bl-col-pm   { width:146px; }
+.bl-col-note { width:230px; }
+.bl-id-b { display:inline-block; font-size:12px; font-weight:700; color:var(--lavender-2); background:rgba(176,132,204,.10); padding:2px 6px; border-radius:.35rem; }
+.bl-nm { font-size:15px; font-weight:700; color:var(--t1); }
+.bl-tag { display:inline-block; font-size:12px; font-weight:700; padding:2px 8px; border-radius:.4rem; }
+.bl-tag-attr  { background:rgba(176,132,204,.12); color:var(--lavender-2); }
+.bl-tag-infra { background:rgba(138,201,168,.18); color:#2e7d5b; }
+.bl-tag-move  { background:rgba(245,181,138,.18); color:#b8741c; }
+.bl-tag-bsc-k { background:rgba(91,168,214,.12);  color:#1976B0; }
+.bl-tag-bsc-r { background:rgba(138,201,168,.15); color:#2e7d5b; }
+.bl-tag-bsc-o { background:rgba(245,181,138,.18); color:#b8741c; }
+.bl-note-cell { font-size:12px; color:var(--t3); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:230px; }
+.bl-pm-sel { width:100%; font-size:13px; font-weight:600; padding:4px 6px; border:1px solid var(--ln2); border-radius:.5rem; background:var(--bg-2); color:var(--t1); cursor:pointer; transition:border-color .15s; }
+.bl-pm-sel:focus { outline:none; border-color:var(--lavender); }
+.bl-pm-sel.unset { color:var(--t3); font-weight:400; }
+.bl-empty { padding:3rem; text-align:center; color:var(--t3); }
+.bl-save-banner { display:none; background:var(--ok-dim); border:1px solid var(--ok); border-radius:.8rem; padding:.7rem 1.1rem; font-size:13px; color:var(--ok); margin-bottom:1rem; align-items:center; gap:.9rem; flex-wrap:wrap; }
+.bl-save-banner.show { display:flex; }
+.bl-save-btn { font-size:12px; font-weight:700; padding:4px 12px; border:1px solid var(--ok); border-radius:.5rem; background:transparent; color:var(--ok); cursor:pointer; white-space:nowrap; }
+.bl-save-btn:hover { background:var(--ok-dim); }
 
 /* ════════════════════════════════════════════════════════════
    МОДАЛКА
@@ -2429,7 +2413,7 @@ footer {
     <div class="hero-eyebrow">P4 · Резерв портфеля</div>
     <h1 class="hero-title">Полный <b>бэклог</b> портфеля</h1>
     <p class="hero-lead">
-      9 проектов в режиме резерва. Не активировать до отдельного решения Комитета по портфелю
+      34 проекта в режиме резерва. Не активировать до отдельного решения Комитета по портфелю
       (Регламент v1.2 §5.2). Приоритет автоматически P4, EVM не считается, бюджет —
       ориентировочная оценка для воронки инвестиций.
     </p>
@@ -2463,7 +2447,7 @@ footer {
 <section>
   <h2 class="section-title">Проекты в бэклоге</h2>
   <p class="section-sub" id="bl-count">9 проектов</p>
-  <div class="backlog-grid-full" id="backlog-grid-full"></div>
+  <div id="backlog-grid-full"></div>
 </section>
 
 </div><!-- /page -->
@@ -3437,6 +3421,8 @@ function saveNewInit(){
 // ════════════════════════════════════════════════════════
 
 const BL_FILTERS = { pm: new Set(), bsc: new Set(), type: new Set(), search: '' };
+const BL_SORT = { col: 'id', dir: 1 };
+const BL_PM_CHANGES = {};
 
 function getUniques(field){
   const set = new Set();
@@ -3460,7 +3446,10 @@ function filterBacklog(){
     if(BL_FILTERS.pm.size > 0 && !BL_FILTERS.pm.has(b.pm)) return false;
     if(BL_FILTERS.bsc.size > 0 && !BL_FILTERS.bsc.has(b.bsc)) return false;
     if(BL_FILTERS.type.size > 0 && !BL_FILTERS.type.has(b.type)) return false;
-    if(BL_FILTERS.search && !b.name.toLowerCase().includes(BL_FILTERS.search.toLowerCase())) return false;
+    if(BL_FILTERS.search){
+      const q = BL_FILTERS.search.toLowerCase();
+      if(!(b.name + ' ' + (b.note||'')).toLowerCase().includes(q)) return false;
+    }
     return true;
   });
 }
@@ -3473,42 +3462,93 @@ function renderBacklogFull(){
       ? `${DATA.backlog.length} проектов`
       : `${filtered.length} из ${DATA.backlog.length} проектов (применены фильтры)`;
 
-  if(filtered.length === 0){
-    el.innerHTML = `<div class="bcf-empty"><div style="font-size:3rem;margin-bottom:1rem">🔍</div>По заданным фильтрам ничего не найдено<br><small>Попробуйте сбросить фильтры или изменить запрос</small></div>`;
+  const sorted = [...filtered].sort((a,b) => {
+    const av = a[BL_SORT.col] ?? '', bv = b[BL_SORT.col] ?? '';
+    if(typeof av === 'number') return BL_SORT.dir*(av-bv);
+    return BL_SORT.dir*String(av).localeCompare(String(bv),'ru');
+  });
+
+  const typeC = {Аттракцион:'bl-tag bl-tag-attr',Инфраструктура:'bl-tag bl-tag-infra',Перемещение:'bl-tag bl-tag-move'};
+  const bscC  = {Клиенты:'bl-tag bl-tag-bsc-k',Развитие:'bl-tag bl-tag-bsc-r',Операции:'bl-tag bl-tag-bsc-o'};
+  const pms   = ['—', ...DATA.managers.map(m => m.name)];
+  const pmOpts = cur => pms.map(p=>`<option value="${esc(p)}"${p===(cur||'—')?' selected':''}>${esc(p)}</option>`).join('');
+  const thH = (col, lbl, cls) => {
+    const active = BL_SORT.col===col;
+    const arrow  = active ? (BL_SORT.dir===1?'↑':'↓') : '↕';
+    return `<th class="${cls||'bl-col-'+col}${active?' bl-sorted':''}" data-blcol="${col}">${lbl} <span style="opacity:.5;font-size:10px">${arrow}</span></th>`;
+  };
+
+  const changedIds = Object.keys(BL_PM_CHANGES);
+  const banner = changedIds.length
+    ? `<div class="bl-save-banner show" id="bl-save-banner">
+         <span>Изменён PM: ${changedIds.map(id=>`#${id} → ${BL_PM_CHANGES[id].to}`).join(' · ')}</span>
+         <button class="bl-save-btn" onclick="blSaveChanges()">Сохранить изменения ↗</button>
+       </div>`
+    : `<div id="bl-save-banner"></div>`;
+
+  if(sorted.length === 0){
+    el.innerHTML = banner + `<div class="bl-empty">По заданным фильтрам ничего не найдено</div>`;
     return;
   }
 
-  el.innerHTML = filtered.map(b => `
-    <div class="bcf-card">
-      <div class="bcf-head">
-        <span class="bcf-id">#${b.id}</span>
-        <span class="bcf-priority">${esc(b.priority || 'P4')}</span>
-      </div>
-      <div class="bcf-name">${esc(b.name)}</div>
-      <div class="bcf-grid">
-        <div>
-          <div class="bcf-cell-lbl">PM</div>
-          <div class="bcf-cell-val">${esc(b.pm || '—')}</div>
-        </div>
-        <div>
-          <div class="bcf-cell-lbl">Тип</div>
-          <div class="bcf-cell-val">${esc(b.type || '—')}</div>
-        </div>
-        <div>
-          <div class="bcf-cell-lbl">BSC</div>
-          <div class="bcf-cell-val">${esc(b.bsc || '—')}</div>
-        </div>
-        <div>
-          <div class="bcf-cell-lbl">Бюджет (оценка)</div>
-          <div class="bcf-cell-val">${b.budget ? b.budget+' млн ₽' : '—'}</div>
-        </div>
-        ${b.note ? `<div style="grid-column:1/-1">
-          <div class="bcf-cell-lbl">Примечание</div>
-          <div class="bcf-cell-val" style="font-weight:500;color:var(--t2)">${esc(b.note)}</div>
-        </div>` : ''}
-      </div>
-    </div>
-  `).join('');
+  el.innerHTML = banner + `
+  <div class="bl-tbl-outer">
+  <table class="bl-tbl">
+    <thead><tr>
+      ${thH('id','#','bl-col-id')}
+      ${thH('name','Название','bl-col-name')}
+      ${thH('type','Тип','bl-col-type')}
+      ${thH('bsc','BSC','bl-col-bsc')}
+      ${thH('pm','PM','bl-col-pm')}
+      <th class="bl-col-note">Примечание / контакт</th>
+    </tr></thead>
+    <tbody>
+    ${sorted.map(b => `
+      <tr>
+        <td><span class="bl-id-b">${b.id}</span></td>
+        <td><span class="bl-nm">${esc(b.name)}</span></td>
+        <td><span class="${typeC[b.type]||'bl-tag'}">${esc(b.type||'—')}</span></td>
+        <td><span class="${bscC[b.bsc]||'bl-tag'}">${esc(b.bsc||'—')}</span></td>
+        <td><select class="bl-pm-sel${(!b.pm||b.pm==='—')?' unset':''}" data-blid="${b.id}" onchange="blPmChange(this)">${pmOpts(b.pm)}</select></td>
+        <td class="bl-note-cell" title="${esc(b.note||'')}">${esc(b.note)||'—'}</td>
+      </tr>
+    `).join('')}
+    </tbody>
+  </table>
+  </div>`;
+
+  el.querySelectorAll('th[data-blcol]').forEach(th => {
+    th.addEventListener('click', () => {
+      const col = th.dataset.blcol;
+      if(BL_SORT.col === col) BL_SORT.dir *= -1;
+      else { BL_SORT.col = col; BL_SORT.dir = 1; }
+      renderBacklogFull();
+    });
+  });
+}
+
+function blPmChange(sel){
+  const id  = +sel.dataset.blid;
+  const row = DATA.backlog.find(b => b.id === id);
+  if(!row) return;
+  const prev = row.pm || '—';
+  row.pm = sel.value;
+  sel.className = 'bl-pm-sel' + ((!row.pm||row.pm==='—')?' unset':'');
+  BL_PM_CHANGES[id] = { name: row.name, from: prev, to: row.pm };
+  const banner = document.getElementById('bl-save-banner');
+  if(banner){
+    const ids = Object.keys(BL_PM_CHANGES);
+    banner.className = 'bl-save-banner show';
+    banner.innerHTML = `<span>Изменён PM: ${ids.map(i=>`#${i} → ${BL_PM_CHANGES[i].to}`).join(' · ')}</span>
+      <button class="bl-save-btn" onclick="blSaveChanges()">Сохранить изменения ↗</button>`;
+  }
+}
+
+function blSaveChanges(){
+  const msg = Object.entries(BL_PM_CHANGES)
+    .map(([id,c]) => `id ${id} (${c.name.slice(0,30)}) → ${c.to}`)
+    .join(', ');
+  sendPrompt('Сохрани изменения PM в DATA.backlog в index.html: ' + msg + '. Сделай git commit + push.');
 }
 
 function bindFilters(){
