@@ -633,54 +633,67 @@ section + section {
 }
 .evm-note b { color: var(--bad); font-weight: 800; }
 
-/* Timeline ближайших запусков */
-.tl-list {
+/* Timeline ближайших запусков — горизонтальная ось */
+.tl-list { overflow-x: auto; padding-bottom: 4px; }
+.tl-axis-track {
+  display: flex;
+  align-items: flex-end;
+  min-width: 560px;
+  position: relative;
+  padding-bottom: 16px;
+  padding-top: 6px;
+  gap: 0;
+}
+.tl-axis-line {
+  position: absolute;
+  bottom: 21px;
+  left: 16px;
+  right: 16px;
+  height: 2px;
+  background: rgba(91,168,214,.2);
+  border-radius: 1px;
+  z-index: 0;
+}
+.tl-node {
+  flex: 1;
   display: flex;
   flex-direction: column;
-  gap: .5rem;
-}
-.tl-item {
-  display: grid;
-  grid-template-columns: 6rem 1fr auto;
-  gap: var(--sp-1);
   align-items: center;
-  background: var(--bg-3);
-  border-radius: .7rem;
-  padding: .7rem .9rem;
-  border-left: 3px solid var(--sky);
+  position: relative;
+  z-index: 1;
 }
-.tl-date {
-  font-size: var(--fs-base);
-  font-weight: 800;
-  color: var(--t1);
-  line-height: 1;
+.tl-node.tl-alt { justify-content: flex-start; padding-top: 0; }
+.tl-card {
+  background: var(--bg-2);
+  border: 1px solid var(--ln);
+  border-radius: .75rem;
+  padding: 6px 7px;
+  text-align: center;
+  width: 80px;
+  box-shadow: var(--shadow-1);
+  margin-bottom: 5px;
 }
-.tl-days {
-  font-size: var(--fs-base);
-  color: var(--t3);
-  margin-top: .15rem;
-  font-weight: 600;
+.tl-node.tl-alt .tl-card { margin-bottom: 0; margin-top: 5px; order: 3; }
+.tl-node.tl-alt .tl-dot  { order: 1; margin-bottom: 0; margin-top: 0; }
+.tl-node.tl-alt .tl-stem { order: 2; }
+.tl-stem { width: 2px; height: 10px; background: rgba(91,168,214,.25); flex-shrink: 0; }
+.tl-node.tl-alt .tl-stem { background: rgba(31,27,22,.10); }
+.tl-dot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: var(--sky);
+  border: 2px solid var(--bg-1);
+  box-shadow: 0 0 0 2px var(--sky);
+  flex-shrink: 0;
+  margin-bottom: 16px;
 }
-.tl-name {
-  font-size: var(--fs-base);
-  font-weight: 700;
-  color: var(--t1);
-}
-.tl-pm {
-  font-size: var(--fs-base);
-  color: var(--t3);
-  margin-top: .1rem;
-  font-weight: 500;
-}
-.tl-badge {
-  font-size: var(--fs-base);
-  font-weight: 700;
-  padding: .25rem .6rem;
-  border-radius: .35rem;
-  background: var(--info-dim);
-  color: var(--info);
-  white-space: nowrap;
-}
+.tl-node.tl-alt .tl-dot { margin-bottom: 0; margin-top: 16px; }
+.tl-dot.tl-urgent { background: var(--bad); box-shadow: 0 0 0 2px var(--bad); }
+.tl-dot.tl-soon   { background: var(--warn); box-shadow: 0 0 0 2px var(--warn); }
+.tl-date { font-size: 13px; font-weight: 800; color: var(--t1); line-height: 1; }
+.tl-days { font-size: 10px; color: var(--t3); margin-top: 2px; }
+.tl-name { font-size: 10px; font-weight: 700; color: var(--t1); line-height: 1.3; margin-top: 3px; }
+.tl-pm   { font-size: 10px; color: var(--t4); margin-top: 2px; }
 
 /* ════════════════════════════════════════════════════════════
    3: СЕКЦИЯ PM (повторяется 4 раза)
@@ -2953,19 +2966,22 @@ function renderTimeline(){
     el.innerHTML = '<div style="color:var(--t3);font-style:italic;padding:1rem;">Нет дат завершения в xlsx</div>';
     return;
   }
-  el.innerHTML = sorted.map(t => `
-    <div class="tl-item">
-      <div>
+  const urgCls = d => d <= 5 ? ' tl-urgent' : d <= 14 ? ' tl-soon' : '';
+  const nodes = sorted.map((t, i) => {
+    const alt = i % 2 === 1;
+    return `
+    <div class="tl-node${alt?' tl-alt':''}">
+      <div class="tl-card">
         <div class="tl-date">${esc(t.date)}</div>
         <div class="tl-days">через ${t.daysLeft} дн.</div>
-      </div>
-      <div>
         <div class="tl-name">${esc(t.name)}</div>
         <div class="tl-pm">${esc(t.pm)}</div>
       </div>
-      <div class="tl-badge">запуск</div>
-    </div>
-  `).join('');
+      <div class="tl-stem"></div>
+      <div class="tl-dot${urgCls(t.daysLeft)}"></div>
+    </div>`;
+  }).join('');
+  el.innerHTML = `<div class="tl-axis-track"><div class="tl-axis-line"></div>${nodes}</div>`;
 }
 
 // ── РЕНДЕР: Секции PM ──
