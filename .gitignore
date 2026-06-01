@@ -1,0 +1,17 @@
+# PMO мастер-файл с конфиденциальными данными
+PMO_Portfolio_Master_*.xlsx
+*.xlsx
+*.xlsm
+
+# Backups
+backups/
+*.bak
+*.html.bak
+
+# Системные
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Git lock-файлы (Cowork-баг на Windows)
+.git/index.lock
