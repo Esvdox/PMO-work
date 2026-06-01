@@ -2944,15 +2944,26 @@ function allProjects(){
 function renderPortfolioKpis(){
   const p = DATA.portfolio;
   const el = document.getElementById('portfolio-kpis');
+  // Вычисляем динамически из проектов
+  const all = allProjects();
+  const active    = all.filter(x => x.status === 'Активный');
+  const suspended = all.filter(x => x.status === 'Приостановлен');
+  const backlogAll = DATA.backlog ? DATA.backlog.length : 0;
+  const backlogAct = all.filter(x => x.status === 'Backlog').length;
+  const backlogCount = backlogAct + backlogAll;
+  const totalCount = active.length + suspended.length + backlogCount + (p.completed||0);
+  const budgetSum  = active.reduce((s,x) => s + (x.budget||0), 0);
+  const pctArr     = active.map(x => x.pct).filter(v => v != null);
+  const avgPct     = pctArr.length ? Math.round(pctArr.reduce((s,v)=>s+v,0) / pctArr.length) : 0;
   el.innerHTML = `
     <div class="kpi-card">
       <div class="kpi-lbl">Проектов в портфеле</div>
-      <div class="kpi-val">${p.total}</div>
-      <div class="kpi-note">${p.active} активн. · ${p.suspended||0} приост. · ${p.backlog} backlog</div>
+      <div class="kpi-val">${totalCount}</div>
+      <div class="kpi-note">${active.length} активн. · ${suspended.length} приост. · ${backlogCount} backlog</div>
     </div>
     <div class="kpi-card ok">
       <div class="kpi-lbl">Бюджет активных</div>
-      <div class="kpi-val">${p.budgetMln.toLocaleString('ru',{maximumFractionDigits:1})}<span class="kpi-unit">млн ₽</span></div>
+      <div class="kpi-val">${budgetSum.toLocaleString('ru',{maximumFractionDigits:1})}<span class="kpi-unit">млн ₽</span></div>
       <div class="kpi-note">Источник: 01_Проекты</div>
     </div>
     <div class="kpi-card warn">
@@ -2962,7 +2973,7 @@ function renderPortfolioKpis(){
     </div>
     <div class="kpi-card lavender">
       <div class="kpi-lbl">Средний % выполнения</div>
-      <div class="kpi-val">${p.avgPct}<span class="kpi-unit">%</span></div>
+      <div class="kpi-val">${avgPct}<span class="kpi-unit">%</span></div>
       <div class="kpi-note">По активным проектам</div>
     </div>
   `;
@@ -2970,7 +2981,27 @@ function renderPortfolioKpis(){
 
 // ── РЕНДЕР: Health-блок ──
 function renderHealth(){
-  const h = DATA.health;
+  // Вычисляем EVM динамически из активных проектов
+  const active = allProjects().filter(p => p.status === 'Активный');
+  const evSum  = active.reduce((s,p) => s + (p.ev  != null ? p.ev  : 0), 0);
+  const acSum  = active.reduce((s,p) => s + (p.ac  != null ? p.ac  : 0), 0);
+  const pvSum  = active.reduce((s,p) => s + (p.pv  != null ? p.pv  : 0), 0);
+  const bacSum = active.reduce((s,p) => s + (p.budget != null ? p.budget : 0), 0);
+  // SPI/CPI: считаем только проекты где есть оба ev+pv или ev+ac
+  const spiProj = active.filter(p => p.ev != null && p.pv != null && p.pv > 0);
+  const cpiProj = active.filter(p => p.ev != null && p.ac != null && p.ac > 0);
+  const spiEV = spiProj.reduce((s,p)=>s+p.ev,0);
+  const spiPV = spiProj.reduce((s,p)=>s+p.pv,0);
+  const cpiEV = cpiProj.reduce((s,p)=>s+p.ev,0);
+  const cpiAC = cpiProj.reduce((s,p)=>s+p.ac,0);
+  const spi = spiPV > 0 ? spiEV/spiPV : null;
+  const cpi = cpiAC > 0 ? cpiEV/cpiAC : null;
+  const cv  = evSum - acSum;
+  const eac = (cpi && cpi > 0) ? bacSum / cpi : null;
+  // Предупреждение об искажении
+  const evNoPv = active.filter(p => p.ev != null && p.ev > 0 && (p.pv == null || p.pv === 0)).length;
+  const dataIssue = evNoPv > 0 ? `У ${evNoPv} проектов EV без PV — портфельный SPI/CPI искажён` : null;
+  const h = { spi, cpi, eac, cv, ev:evSum, ac:acSum, pv:pvSum, bac:bacSum, dataIssue };
   const el = document.getElementById('health-grid');
   const noteEl = document.getElementById('evm-note');
 
