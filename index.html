@@ -2757,13 +2757,13 @@ const DATA = {
     },
   ],
 
-  // Топ-5 рисков из xlsx (02_Риски) — только активные проекты
+  // Топ-5 рисков (PMO-02.07 docx Шалушкин + xlsx, обновлено 02.06.2026)
   topRisks:[
-    { proj:"Double Heart", pm:"Шалушкин", score:20, lbl:"Задержка поставки оборудования из Италии — таможня и логистика", prob:"Высокая", impact:"Критический", strategy:"Снижение", action:"Переговоры с поставщиком, альтернативный вендор в резерве", emv:6.1 },
-    { proj:"Sky Screamer", pm:"Шалушкин", score:20, lbl:"Несоответствие ТЗ при монтаже — высотные работы", prob:"Высокая", impact:"Критический", strategy:"Снижение", action:"Доп. проверочный выезд инженера-приёмщика до монтажа", emv:5.6 },
-    { proj:"Получение 2,3 МВт", pm:"Киселёв", score:16, lbl:"Срыв сроков сетевой организации (Мосэнерго)", prob:"Высокая", impact:"Высокий", strategy:"Передача", action:"Штрафные санкции в договоре, эскалация в Мосэнерго", emv:4.8 },
-    { proj:"Sky Screamer", pm:"Шалушкин", score:15, lbl:"Изменение требований Ростехнадзора к высотным аттракционам", prob:"Средняя", impact:"Критический", strategy:"Снижение", action:"Раннее согласование, юридическое сопровождение", emv:2.7 },
-    { proj:"Ивент-зона. Лофт", pm:"Киселёв", score:12, lbl:"Изменение планировки по требованию пожарных", prob:"Средняя", impact:"Высокий", strategy:"Принятие", action:"Резерв на перепроектирование заложен в бюджет", emv:1.5 },
+    { proj:"Double Heart",    pm:"Шалушкин", score:20, lbl:"Baseline: не зафиксирована дата договора с логистической компанией в уставе", prob:"Высокая",  impact:"Критичный", strategy:"Устранение / переутверждение", emv:6.1 },
+    { proj:"Sky Screamer",    pm:"Шалушкин", score:20, lbl:"Baseline: не зафиксирована дата договора с логистической компанией в уставе", prob:"Высокая",  impact:"Критичный", strategy:"Устранение / переутверждение", emv:5.6 },
+    { proj:"Получение 2,3 МВт", pm:"Киселёв", score:16, lbl:"Срыв сроков сетевой организации (Мосэнерго)",                              prob:"Высокая",  impact:"Высокий",  strategy:"Передача",                        emv:4.8 },
+    { proj:"Sky Screamer",    pm:"Шалушкин", score:15, lbl:"Логистика: риск утери / повреждения аттракциона при перемещении",            prob:"Средняя",  impact:"Критичный", strategy:"Снижение / эскалация",            emv:2.7 },
+    { proj:"ДиноПарк. Модернизация", pm:"Ермолаева", score:20, lbl:"⚡ СРОЧНО 05.06: задержка авансового платежа → срыв запуска производства аниматроников", prob:"Высокая", impact:"Критичный", strategy:"Снижение / эскалация", emv:2.5 },
   ],
 
   risksList:[
@@ -2820,28 +2820,30 @@ const DATA = {
     { proj:"Spider", cat:"Технический", lbl:"Несовместимость новой системы безопасности", p:2, i:3, score:6, emv:0.6, strategy:"Снижение", status:"Сгорел" },
   ],
 
-  // Карта рисков по проектам (источник: 02_Риски)
+  // Карта рисков по проектам (источник: PMO-02.07 docx, обновлено 02.06.2026)
+  // Шалушкин: 5 рисков / проект, все Открыт. Матрица mx[5-P][I-1]
+  // Ермолаева: реестры не заполнены — очищены до нуля
   risksMatrices:[
-    { pm:"Шалушкин", name:"Sky Screamer", isBacklog:false, isSuspended:false, active:2, burned:0, realized:0, identified:0, res:8.3, rel:0.0, mx:[[0,0,0,0,0],[0,0,0,0,1],[0,0,0,0,1],[0,0,0,0,0],[0,0,0,0,0]] },
-    { pm:"Киселёв", name:"Получение 2,3 МВт", isBacklog:false, isSuspended:false, active:2, burned:0, realized:0, identified:0, res:6.3, rel:0.0, mx:[[0,0,0,0,0],[0,0,0,1,0],[0,0,1,0,0],[0,0,0,0,0],[0,0,0,0,0]] },
-    { pm:"Шалушкин", name:"Double Heart", isBacklog:false, isSuspended:false, active:1, burned:0, realized:0, identified:0, res:6.1, rel:0.0, mx:[[0,0,0,0,0],[0,0,0,0,1],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0]] },
-    { pm:"Шалушкин", name:"Shuttle Coaster", isBacklog:false, isSuspended:false, active:1, burned:0, realized:0, identified:0, res:2.0, rel:0.0, mx:[[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,1],[0,0,0,0,0]] },
-    { pm:"Шалушкин", name:"Super Spinning", isBacklog:false, isSuspended:false, active:1, burned:0, realized:1, identified:0, res:1.8, rel:0.0, mx:[[0,0,0,0,0],[0,0,0,1,0],[0,0,1,0,0],[0,0,0,0,0],[0,0,0,0,0]] },
-    { pm:"Киселёв", name:"Бургерная «Две руки»", isBacklog:false, isSuspended:false, active:1, burned:0, realized:0, identified:0, res:1.6, rel:0.0, mx:[[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,1,0],[0,0,0,0,0]] },
-    { pm:"Киселёв", name:"Ивент-зона. Лофт", isBacklog:false, isSuspended:false, active:1, burned:0, realized:0, identified:0, res:1.5, rel:0.0, mx:[[0,0,0,0,0],[0,0,0,0,0],[0,0,0,1,0],[0,0,0,0,0],[0,0,0,0,0]] },
-    { pm:"Ермолаева", name:"ДиноПарк. Модернизация", isBacklog:false, isSuspended:false, active:1, burned:0, realized:0, identified:0, res:0.7, rel:0.0, mx:[[0,0,0,0,0],[0,0,0,0,0],[0,1,0,0,0],[0,0,0,0,0],[0,0,0,0,0]] },
-    { pm:"Шалушкин", name:"Suspended Coaster", isBacklog:false, isSuspended:false, active:0, burned:2, realized:0, identified:0, res:0.0, rel:3.8, mx:[[0,0,0,0,0],[0,0,1,0,0],[0,0,0,0,0],[0,0,1,0,0],[0,0,0,0,0]] },
-    { pm:"Шалушкин", name:"Spider", isBacklog:false, isSuspended:false, active:0, burned:1, realized:0, identified:0, res:0.0, rel:0.6, mx:[[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,1,0,0],[0,0,0,0,0]] },
-    { pm:"Киселёв", name:"Временная мощность 1 МВт", isBacklog:false, isSuspended:false, active:0, burned:1, realized:0, identified:0, res:0.0, rel:0.7, mx:[[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,1,0],[0,0,0,0,0]] },
-    { pm:"Ермолаева", name:"Хаски. Доработка", isBacklog:false, isSuspended:false, active:0, burned:0, realized:0, identified:5, res:0.0, rel:0.0, mx:[[0,0,0,0,0],[0,0,0,0,0],[0,0,5,0,0],[0,0,0,0,0],[0,0,0,0,0]] },
-    { pm:"Ермолаева", name:"Молния. Оформление", isBacklog:false, isSuspended:false, active:0, burned:0, realized:0, identified:5, res:0.0, rel:0.0, mx:[[0,0,0,0,0],[0,0,0,0,0],[0,0,5,0,0],[0,0,0,0,0],[0,0,0,0,0]] },
-    { pm:"Киселёв", name:"Доработка кассовых зон", isBacklog:false, isSuspended:false, active:0, burned:0, realized:0, identified:5, res:0.0, rel:0.0, mx:[[0,0,0,0,0],[0,0,0,0,0],[0,0,5,0,0],[0,0,0,0,0],[0,0,0,0,0]] },
-    { pm:"Киселёв", name:"Ивент-зона. Айва", isBacklog:false, isSuspended:false, active:0, burned:0, realized:0, identified:0, res:0.0, rel:0.0, mx:[[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0]] },
-    { pm:"Киселёв", name:"Ивент-зона. Динопарк", isBacklog:false, isSuspended:false, active:0, burned:0, realized:0, identified:0, res:0.0, rel:0.0, mx:[[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0]] },
-    { pm:"Киселёв", name:"Ивент-зона. Мадагаскар", isBacklog:false, isSuspended:false, active:0, burned:0, realized:0, identified:0, res:0.0, rel:0.0, mx:[[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0]] },
-    { pm:"Киселёв", name:"Благоустройство экстрим-зоны", isBacklog:false, isSuspended:true, active:0, burned:0, realized:0, identified:6, res:0.0, rel:0.0, mx:[[0,0,0,0,0],[0,0,0,0,0],[0,0,4,0,0],[0,0,0,2,0],[0,0,0,0,0]] },
-    { pm:"Иванов", name:"Слабоалкогольная лицензия", isBacklog:false, isSuspended:true, active:0, burned:0, realized:0, identified:5, res:0.0, rel:0.0, mx:[[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,5,0],[0,0,0,0,0]] },
-    { pm:"Иванов", name:"Предпроект Озёр (Даймонд)", isBacklog:false, isSuspended:true, active:0, burned:0, realized:0, identified:5, res:0.0, rel:0.0, mx:[[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,5,0],[0,0,0,0,0]] },
+    { pm:"Шалушкин", name:"Sky Screamer",    isBacklog:false, isSuspended:false, active:5, burned:0, realized:0, identified:0, res:8.3,  rel:0.0, mx:[[0,0,0,0,0],[0,0,1,0,1],[0,0,2,0,1],[0,0,0,0,0],[0,0,0,0,0]] },
+    { pm:"Шалушкин", name:"Double Heart",    isBacklog:false, isSuspended:false, active:5, burned:0, realized:0, identified:0, res:6.1,  rel:0.0, mx:[[0,0,0,0,0],[0,0,0,0,1],[0,0,3,0,1],[0,0,0,0,0],[0,0,0,0,0]] },
+    { pm:"Киселёв",  name:"Получение 2,3 МВт", isBacklog:false, isSuspended:false, active:2, burned:0, realized:0, identified:0, res:6.3, rel:0.0, mx:[[0,0,0,0,0],[0,0,0,1,0],[0,0,1,0,0],[0,0,0,0,0],[0,0,0,0,0]] },
+    { pm:"Шалушкин", name:"Shuttle Coaster", isBacklog:false, isSuspended:false, active:5, burned:0, realized:0, identified:0, res:2.0,  rel:0.0, mx:[[0,0,0,0,0],[0,0,1,0,1],[0,0,2,0,1],[0,0,0,0,0],[0,0,0,0,0]] },
+    { pm:"Шалушкин", name:"Super Spinning",  isBacklog:false, isSuspended:false, active:5, burned:0, realized:0, identified:0, res:1.8,  rel:0.0, mx:[[0,0,0,0,0],[0,0,1,0,1],[0,0,2,0,1],[0,0,0,0,0],[0,0,0,0,0]] },
+    { pm:"Киселёв",  name:"Бургерная «Две руки»", isBacklog:false, isSuspended:false, active:1, burned:0, realized:0, identified:0, res:1.6, rel:0.0, mx:[[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,1,0],[0,0,0,0,0]] },
+    { pm:"Киселёв",  name:"Ивент-зона. Лофт", isBacklog:false, isSuspended:false, active:1, burned:0, realized:0, identified:0, res:1.5, rel:0.0, mx:[[0,0,0,0,0],[0,0,0,0,0],[0,0,0,1,0],[0,0,0,0,0],[0,0,0,0,0]] },
+    { pm:"Шалушкин", name:"Suspended Coaster", isBacklog:false, isSuspended:false, active:5, burned:0, realized:0, identified:0, res:1.5, rel:0.0, mx:[[0,0,0,0,0],[0,0,1,0,1],[0,0,2,0,1],[0,0,0,0,0],[0,0,0,0,0]] },
+    { pm:"Шалушкин", name:"Spider",          isBacklog:false, isSuspended:false, active:5, burned:0, realized:0, identified:0, res:1.2,  rel:0.0, mx:[[0,0,0,0,0],[0,0,1,0,1],[0,0,2,0,1],[0,0,0,0,0],[0,0,0,0,0]] },
+    { pm:"Ермолаева", name:"ДиноПарк. Модернизация", isBacklog:false, isSuspended:false, active:10, burned:0, realized:0, identified:0, res:4.5, rel:0.0, mx:[[0,0,0,0,0],[0,0,0,1,2],[0,0,0,2,1],[0,0,1,2,1],[0,0,0,0,0]] },
+    { pm:"Киселёв",  name:"Временная мощность 1 МВт", isBacklog:false, isSuspended:false, active:0, burned:1, realized:0, identified:0, res:0.0, rel:0.7, mx:[[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,1,0],[0,0,0,0,0]] },
+    { pm:"Ермолаева", name:"Хаски. Доработка", isBacklog:false, isSuspended:false, active:0, burned:0, realized:0, identified:0, res:0.0, rel:0.0, mx:[[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0]] },
+    { pm:"Ермолаева", name:"Молния. Оформление", isBacklog:false, isSuspended:false, active:2, burned:4, realized:0, identified:5, res:0.2, rel:0.0, mx:[[0,0,0,0,0],[0,0,0,0,0],[0,0,3,1,0],[0,0,1,0,0],[0,0,1,0,1]] },
+    { pm:"Киселёв",  name:"Доработка кассовых зон", isBacklog:false, isSuspended:false, active:0, burned:0, realized:0, identified:0, res:0.0, rel:0.0, mx:[[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0]] },
+    { pm:"Киселёв",  name:"Ивент-зона. Айва", isBacklog:false, isSuspended:false, active:0, burned:0, realized:0, identified:0, res:0.0, rel:0.0, mx:[[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0]] },
+    { pm:"Киселёв",  name:"Ивент-зона. Динопарк", isBacklog:false, isSuspended:false, active:0, burned:0, realized:0, identified:0, res:0.0, rel:0.0, mx:[[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0]] },
+    { pm:"Киселёв",  name:"Ивент-зона. Мадагаскар", isBacklog:false, isSuspended:false, active:0, burned:0, realized:0, identified:0, res:0.0, rel:0.0, mx:[[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0]] },
+    { pm:"Киселёв",  name:"Благоустройство экстрим-зоны", isBacklog:false, isSuspended:true, active:0, burned:0, realized:0, identified:6, res:0.0, rel:0.0, mx:[[0,0,0,0,0],[0,0,0,0,0],[0,0,4,0,0],[0,0,0,2,0],[0,0,0,0,0]] },
+    { pm:"Иванов",   name:"Слабоалкогольная лицензия", isBacklog:false, isSuspended:true, active:0, burned:0, realized:0, identified:5, res:0.0, rel:0.0, mx:[[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,5,0],[0,0,0,0,0]] },
+    { pm:"Иванов",   name:"Предпроект Озёр (Даймонд)", isBacklog:false, isSuspended:true, active:0, burned:0, realized:0, identified:5, res:0.0, rel:0.0, mx:[[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,5,0],[0,0,0,0,0]] },
     { pm:"Ермолаева", name:"Инфоцентр", isBacklog:false, isSuspended:false, active:0, burned:0, realized:0, identified:0, res:0.0, rel:0.0, mx:[[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0]] },
   ],
 
