@@ -1127,7 +1127,7 @@ section + section {
 .dt {
   width: 100%;
   border-collapse: collapse;
-  font-size: var(--fs-base);
+  font-size: 14px;
 }
 .dt thead {
   background: var(--bg-3);
@@ -1149,11 +1149,13 @@ section + section {
 }
 .dt th.num { text-align: right; }
 .dt td {
-  padding: .8rem .9rem;
+  padding: .65rem .9rem;
   border-bottom: 1px solid var(--ln);
   vertical-align: middle;
   white-space: nowrap;
+  font-size: 14px;
 }
+.dt td.dt-phase { white-space: normal; min-width: 9rem; }
 .dt td.num {
   text-align: right;
   font-variant-numeric: tabular-nums;
@@ -3381,14 +3383,14 @@ function renderRow(p){
   const rag = p.rag || 'no-data';
   const ragTxt = {ahead:'Опережение',ontime:'В графике',risky:'Зона риска',late:'Просрочка','no-data':'—'}[rag] || rag;
   const budgetPlan = p.budget!=null ? p.budget.toLocaleString('ru',{maximumFractionDigits:1}) : '—';
-  const budgetFact = p.ac!=null ? p.ac.toLocaleString('ru',{maximumFractionDigits:1}) : '—';
+  const budgetFact = (p.ac!=null && (p.ac > 0 || p.pct > 0)) ? p.ac.toLocaleString('ru',{maximumFractionDigits:1}) : '—';
   const launchPlan = p.baseline || '—';
   const launchFact = p.forecast || '—';
   const pct = p.pct!=null ? p.pct+'%' : '—';
   const pmShort = p.pmFio ? p.pmFio.split(' ').slice(-1)[0] : '—';
 
   // Цветовая индикация
-  const budgetFactCls = (p.ac!=null && p.budget!=null)
+  const budgetFactCls = (p.ac!=null && p.ac > 0 && p.budget!=null)
     ? (p.ac > p.budget ? 'over' : (p.ac < p.budget*0.95 ? 'under' : ''))
     : '';
   const launchFactCls = (p.baseline && p.forecast && p.baseline !== p.forecast)
@@ -3407,7 +3409,7 @@ function renderRow(p){
       <td class="num">${pct}</td>
       <td class="num">${launchPlan}</td>
       <td class="num ${launchFactCls}">${launchFact}</td>
-      <td>${(() => { const ph = getPhase(p); return `<span class="phase-badge phase-${ph.key}">${esc(ph.name)}</span>`; })()}</td>
+      <td class="dt-phase">${(() => { const ph = getPhase(p); return `<span class="phase-badge phase-${ph.key}">${esc(ph.name)}</span>`; })()}</td>
       <td><span class="rag-badge ${rag}">${ragTxt}</span></td>
     </tr>
   `;
