@@ -77,6 +77,8 @@
   --shadow-lavender: 0 4px 16px rgba(176,132,204,.18);
   --shadow-peach:    0 4px 16px rgba(245,181,138,.20);
 
+  --fs-sm: 13px;
+
   /* ── ШАГ ── */
   --sp-1: .5rem;
   --sp-2: 1rem;
@@ -2270,11 +2272,13 @@ footer {
 .pm-section.collapsed .pm-toggle-btn svg { transform: rotate(-90deg); }
 .pm-projects-wrap {
   overflow: hidden;
-  transition: max-height .3s ease, opacity .25s ease;
+  transition: max-height .35s ease, opacity .25s ease;
+  max-height: 9999px;
+  opacity: 1;
 }
 .pm-section.collapsed .pm-projects-wrap {
-  max-height: 0 !important;
   opacity: 0;
+  pointer-events: none;
 }
 </style>
 </head>
@@ -3119,18 +3123,29 @@ function renderTimeline(){
 // ── Collapse/expand PM section ──
 function togglePmSection(btn) {
   const section = btn.closest('.pm-section');
-  const label = btn.querySelector('.pm-toggle-label');
-  const wrap = section.querySelector('.pm-projects-wrap');
-  const isCollapsed = section.classList.toggle('collapsed');
-  label.textContent = isCollapsed ? 'развернуть' : 'свернуть';
-  if (!isCollapsed) {
-    // Re-measure for smooth expand
+  const label   = btn.querySelector('.pm-toggle-label');
+  const wrap    = section.querySelector('.pm-projects-wrap');
+  const willCollapse = !section.classList.contains('collapsed');
+
+  if (willCollapse) {
+    // COLLAPSE: фиксируем текущую высоту → анимируем к 0
     wrap.style.maxHeight = wrap.scrollHeight + 'px';
-    wrap.addEventListener('transitionend', () => { wrap.style.maxHeight = '9999px'; }, {once:true});
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      wrap.style.maxHeight = '0';
+      section.classList.add('collapsed');
+      label.textContent = 'развернуть';
+    }));
   } else {
-    // Snap to current height first, then collapse
-    wrap.style.maxHeight = wrap.scrollHeight + 'px';
-    requestAnimationFrame(() => { wrap.style.maxHeight = '0'; });
+    // EXPAND: от 0 → полная высота
+    section.classList.remove('collapsed');
+    wrap.style.maxHeight = '0';
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      wrap.style.maxHeight = wrap.scrollHeight + 'px';
+      label.textContent = 'свернуть';
+      wrap.addEventListener('transitionend', () => {
+        wrap.style.maxHeight = '';   // убираем инлайн — CSS берёт управление (9999px)
+      }, { once: true });
+    }));
   }
 }
 
@@ -3247,7 +3262,7 @@ function renderPmSections(){
           </div>
         </div>
 
-        <div class="pm-projects-wrap" style="max-height: 9999px; opacity: 1;">
+        <div class="pm-projects-wrap">
           <div class="pm-projects">
             ${projHtml}
           </div>
