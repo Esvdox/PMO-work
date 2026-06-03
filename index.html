@@ -2413,6 +2413,10 @@ footer {
 .risk-section .section-title { cursor:pointer; user-select:none; position:relative; padding-right:1.6rem; display:inline-block; }
 .risk-section.collapsed .kt-chev { transform:translateY(-50%) rotate(-90deg); }
 .risk-section.collapsed .risk-grid { display:none; }
+.wp-section .section-title { cursor:pointer; user-select:none; position:relative; padding-right:1.6rem; display:inline-block; }
+.wp-section.collapsed .kt-chev { transform:translateY(-50%) rotate(-90deg); }
+.wp-section.collapsed .wp-days { display:none; }
+.wp-section.collapsed .wp-divider { margin:.4rem 0; }
 .risk-summary { margin-top:.2rem; }
 .kt-summary{display:flex;flex-wrap:wrap;gap:.6rem;margin:.2rem 0 1.1rem}
 .kt-chip{display:inline-flex;align-items:baseline;gap:.4rem;background:var(--bg-2);border:1px solid var(--bg-4);border-radius:.6rem;padding:.45rem .8rem;font-size:14px;color:var(--t2)}
@@ -2549,8 +2553,8 @@ footer {
 <!-- ════════════════════════════════════════════════════════
      2б: НЕДЕЛЬНЫЙ ПЛАН РП
      ════════════════════════════════════════════════════════ -->
-<section class="wp-section">
-  <h2 class="section-title">Работа РП на неделю</h2>
+<section class="wp-section" id="wp-section">
+  <h2 class="section-title" onclick="document.getElementById('wp-section').classList.toggle('collapsed')" title="Свернуть / развернуть">Работа РП на неделю<span class="kt-chev">▾</span></h2>
   <p class="section-sub" id="wp-week-label">Загрузка и задачи по дням</p>
   <div id="weekly-plan"></div>
 </section>
@@ -2598,20 +2602,6 @@ footer {
   </div>
 </section>
 
-<!-- ════════════════════════════════════════════════════════
-     5: БЕНЕФИТЫ И KPI
-     ════════════════════════════════════════════════════════ -->
-<section>
-  <h2 class="section-title">Бенефиты и стратегические KPI</h2>
-  <p class="section-sub">Реестр 03_Бенефиты_KPI · оценка вклада проектов в стратегию парка</p>
-
-  <div class="benefits-empty">
-    <div class="benefits-empty-ico">📊</div>
-    <div class="benefits-empty-h">Раздел в разработке</div>
-    <div>Реестр бенефитов и KPI заполнен на этапе утверждения бизнес-кейсов.<br>
-    Доступен в xlsx-источнике на листе <b>03_Бенефиты_KPI</b>.</div>
-  </div>
-</section>
 
 <!-- ════════════════════════════════════════════════════════
      6: ДЕТАЛЬНЫЙ СВОД
