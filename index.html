@@ -521,6 +521,16 @@ section + section {
   min-width: 2.2rem;
   text-align: center;
 }
+/* Выравнивание: панель «Фазы» заполняет высоту колонки, строки распределяются */
+.portfolio-grid > .portfolio-side:last-child > .panel {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+}
+.portfolio-grid > .portfolio-side:last-child .phases-list {
+  flex: 1 1 auto;
+  justify-content: space-between;
+}
 
 /* ════════════════════════════════════════════════════════════
    2: СОСТАВ ПОРТФЕЛЯ
@@ -636,16 +646,16 @@ section + section {
 .evm-note b { color: var(--bad); font-weight: 800; }
 
 /* Timeline ближайших запусков — горизонтальная ось */
-.tl-list { overflow-x: auto; padding-bottom: 4px; }
+.tl-list { overflow-x: auto; padding-bottom: 2px; }
 .tl-axis-track {
   position: relative;
   min-width: 560px;
-  height: 240px;
+  height: 172px;
   padding: 0 12px;
 }
 .tl-axis-line {
   position: absolute;
-  top: 112px;
+  top: 84px;
   left: 12px; right: 12px;
   height: 2px;
   background: rgba(91,168,214,.5);
@@ -672,15 +682,15 @@ section + section {
   background: var(--bg-2);
   border: 1px solid var(--ln);
   border-radius: .75rem;
-  padding: 6px 7px;
+  padding: 4px 7px;
   text-align: center;
   width: 80px;
   left: 50%;
   transform: translateX(-50%);
   box-shadow: var(--shadow-1);
 }
-.tl-node:not(.tl-alt) .tl-card { bottom: 136px; }
-.tl-node.tl-alt .tl-card        { top: 128px; }
+.tl-node:not(.tl-alt) .tl-card { bottom: 96px; }
+.tl-node.tl-alt .tl-card        { top: 92px; }
 .tl-stem {
   position: absolute;
   width: 2px;
@@ -689,11 +699,11 @@ section + section {
   background: rgba(91,168,214,.35);
   z-index: 1;
 }
-.tl-node:not(.tl-alt) .tl-stem { bottom: 118px; height: 18px; }
-.tl-node.tl-alt    .tl-stem    { top: 118px;    height: 10px; }
+.tl-node:not(.tl-alt) .tl-stem { bottom: 84px; height: 12px; }
+.tl-node.tl-alt    .tl-stem    { top: 84px;    height: 8px; }
 .tl-dot {
   position: absolute;
-  top: 108px;
+  top: 80px;
   left: 50%;
   transform: translateX(-50%);
   width: 10px; height: 10px;
@@ -705,10 +715,11 @@ section + section {
 }
 .tl-dot.tl-urgent { background: var(--bad); box-shadow: 0 0 0 2px var(--bad); }
 .tl-dot.tl-soon   { background: var(--warn); box-shadow: 0 0 0 2px var(--warn); }
-.tl-date { font-size: 13px; font-weight: 800; color: var(--t1); line-height: 1; }
-.tl-days { font-size: 10px; color: var(--t3); margin-top: 2px; }
-.tl-name { font-size: 10px; font-weight: 700; color: var(--t1); line-height: 1.3; margin-top: 3px; }
-.tl-pm   { font-size: 10px; color: var(--t4); margin-top: 2px; }
+.tl-date { font-size: 12px; font-weight: 800; color: var(--t1); line-height: 1; }
+.tl-days { font-size: 10px; color: var(--t3); margin-top: 1px; }
+.tl-name { font-size: 10px; font-weight: 700; color: var(--t1); line-height: 1.2; margin-top: 2px; }
+.tl-pm   { font-size: 10px; color: var(--t4); margin-top: 1px; }
+.tl-panel { padding-top: 1rem; padding-bottom: 1rem; }
 
 /* ════════════════════════════════════════════════════════════
    3: СЕКЦИЯ PM (повторяется 4 раза)
@@ -1523,6 +1534,19 @@ footer {
 .bl-pm-sel { width:100%; font-size:13px; font-weight:600; padding:4px 6px; border:1px solid var(--ln2); border-radius:.5rem; background:var(--bg-2); color:var(--t1); cursor:pointer; transition:border-color .15s; }
 .bl-pm-sel:focus { outline:none; border-color:var(--lavender); }
 .bl-pm-sel.unset { color:var(--t3); font-weight:400; }
+.bl-sel { width:100%; font-size:13px; font-weight:600; padding:4px 6px; border:1px solid var(--ln2); border-radius:.5rem; background:var(--bg-2); color:var(--t1); cursor:pointer; transition:border-color .15s; }
+.bl-sel:focus { outline:none; border-color:var(--lavender); }
+.bl-year-input { width:100%; font-size:13px; font-weight:600; text-align:center; padding:4px 6px; border:1px solid var(--ln2); border-radius:.5rem; background:var(--bg-2); color:var(--t1); }
+.bl-year-input:focus { outline:none; border-color:var(--sky); }
+.bl-col-prio { width:104px; }
+.bl-col-year { width:104px; }
+.bl-note-cell { position:relative; overflow:visible; cursor:help; max-width:230px; }
+.bl-note-text { display:block; font-size:12px; color:var(--t3); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:230px; }
+.bl-note-full { display:none; position:absolute; right:0; top:100%; z-index:60; margin-top:4px; width:max-content; max-width:360px; white-space:normal; background:var(--t1); color:var(--bg-2); font-size:12px; line-height:1.45; padding:8px 11px; border-radius:.55rem; box-shadow:0 8px 26px rgba(0,0,0,.28); }
+.bl-note-cell:hover .bl-note-full { display:block; }
+.bl-head-row { display:flex; align-items:flex-end; justify-content:space-between; gap:1rem; flex-wrap:wrap; }
+.bl-head-search { flex:0 1 340px; font-size:14px; padding:.6rem .9rem; border:1px solid var(--ln2); border-radius:.7rem; background:var(--bg-2); color:var(--t1); }
+.bl-head-search:focus { outline:none; border-color:var(--sky); }
 .bl-empty { padding:3rem; text-align:center; color:var(--t3); }
 .bl-save-banner { display:none; background:var(--ok-dim); border:1px solid var(--ok); border-radius:.8rem; padding:.7rem 1.1rem; font-size:13px; color:var(--ok); margin-bottom:1rem; align-items:center; gap:.9rem; flex-wrap:wrap; }
 .bl-save-banner.show { display:flex; }
@@ -2355,6 +2379,45 @@ footer {
 .wp-gray   { background: var(--bg-3);     color: var(--t3); }
 .wp-empty  { font-size: 11px; color: var(--t4); font-style: italic; }
 .wp-divider { height: 1px; background: var(--ln); margin: var(--sp-2) 0; }
+
+/* ── Задачи РП на сегодня · по КСГ ── */
+.kt-section .section-title { cursor:pointer; user-select:none; position:relative; padding-right:1.6rem; display:inline-block; }
+.kt-chev { position:absolute; right:0; top:50%; transform:translateY(-50%); font-size:13px; color:var(--t3); transition:transform .2s; }
+.kt-section.collapsed .kt-chev { transform:translateY(-50%) rotate(-90deg); }
+.kt-section.collapsed #kt-body { display:none; }
+.kt-summary{display:flex;flex-wrap:wrap;gap:.6rem;margin:.2rem 0 1.1rem}
+.kt-chip{display:inline-flex;align-items:baseline;gap:.4rem;background:var(--bg-2);border:1px solid var(--bg-4);border-radius:.6rem;padding:.45rem .8rem;font-size:14px;color:var(--t2)}
+.kt-chip b{font-size:19px;font-weight:800;color:var(--t1);font-variant-numeric:tabular-nums}
+.kt-chip.r b{color:var(--bad)} .kt-chip.g b{color:var(--ok)} .kt-chip.s b{color:var(--sky-2)}
+.kt-proj{background:var(--bg-2);border:1px solid var(--bg-4);border-radius:.9rem;margin-bottom:1rem;overflow:hidden;box-shadow:var(--shadow-sky)}
+.kt-phead{display:flex;align-items:center;gap:.7rem;flex-wrap:wrap;padding:.85rem 1.1rem;background:linear-gradient(0deg,var(--bg-3),var(--bg-2));border-bottom:1px solid var(--bg-4);cursor:pointer}
+.kt-phead:hover .kt-pname{color:var(--sky-2)}
+.kt-pname{font-size:18px;font-weight:800;color:var(--t1)}
+.kt-palias{font-size:13px;color:var(--t3)}
+.kt-prp{margin-left:auto;font-size:12px;font-weight:700;color:var(--sky-2);background:var(--sky-glow);padding:.2rem .6rem;border-radius:.45rem;white-space:nowrap}
+.kt-pcount{font-size:12px;font-weight:800;color:var(--t1);background:var(--bg-4);padding:.2rem .55rem;border-radius:.45rem}
+.kt-tbl{width:100%;border-collapse:collapse;font-size:14px}
+.kt-tbl th{text-align:left;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--t3);padding:.55rem 1.1rem;border-bottom:1px solid var(--bg-4);white-space:nowrap}
+.kt-tbl th.num,.kt-tbl td.num{text-align:center}
+.kt-tbl td{padding:.6rem 1.1rem;border-bottom:1px solid var(--bg-3);color:var(--t1);vertical-align:middle}
+.kt-tbl tr:last-child td{border-bottom:none}
+.kt-tbl tr:hover td{background:var(--bg-3)}
+.kt-task{font-weight:600;color:var(--t1)}
+.kt-fin{font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap}
+.kt-eff{font-variant-numeric:tabular-nums;white-space:nowrap;color:var(--t2)}
+.kt-eff b{color:var(--t1);font-weight:800}
+.kt-eff .pl{color:var(--t3)}
+.kt-badge{display:inline-block;font-size:12px;font-weight:800;padding:.18rem .5rem;border-radius:.4rem;font-variant-numeric:tabular-nums;white-space:nowrap}
+.kt-dev-r{background:var(--bad-dim);color:var(--bad)}
+.kt-dev-g{background:var(--ok-dim);color:var(--ok)}
+.kt-dev-n{background:var(--bg-4);color:var(--t2)}
+.kt-dev-x{background:transparent;color:var(--t3);font-weight:600}
+.kt-pct{display:inline-block;font-size:12px;font-weight:800;padding:.18rem .5rem;border-radius:.4rem;font-variant-numeric:tabular-nums}
+.kt-pct-100{background:var(--ok-dim);color:var(--ok)}
+.kt-pct-mid{background:var(--warn-dim);color:var(--warn)}
+.kt-pct-0{background:var(--bg-4);color:var(--t3)}
+@media(max-width:720px){.kt-tbl th:nth-child(3),.kt-tbl td:nth-child(3){display:none}}
+
 </style>
 </head>
 <body>
@@ -2413,11 +2476,6 @@ footer {
   <div class="hero-content">
     <div class="hero-eyebrow">Парк Сказка · Москва, Крылатское</div>
     <h1 class="hero-title">Управление портфелем <b>проектов</b><br>Департамент PMO</h1>
-    <p class="hero-lead">
-      Единая система управления проектами парка по стандартам <b>PMBOK 8</b>, <b>ГОСТ Р 54869-2011</b>
-      и <b>ISO 21502:2020</b>. Портфель включает строительство аттракционов, развитие инфраструктуры,
-      события и ВЭД-проекты. Регламент v4.3 поддерживает три режима исполнения: Lite, Standard, Full.
-    </p>
   </div>
   <div class="hero-logo">🎡</div>
 </section>
@@ -2427,7 +2485,7 @@ footer {
      ════════════════════════════════════════════════════════ -->
 <section>
   <h2 class="section-title">Состав портфеля</h2>
-  <p class="section-sub" id="portfolio-sub">Источник: PMO_Portfolio_Master_v6.xlsx · версия v2.9 · обновлено 18.05.2026</p>
+  <p class="section-sub" id="portfolio-sub">обновлено 18.05.2026</p>
 
   <!-- Глобальные KPI -->
   <div class="kpi-row" id="portfolio-kpis"></div>
@@ -2453,7 +2511,7 @@ footer {
       </div>
     </div>
   </div>
-  <div class="panel" style="margin-top:var(--sp-2)">
+  <div class="panel tl-panel" style="margin-top:var(--sp-2)">
     <div class="panel-h">Ближайшие запуски</div>
     <div class="tl-list" id="timeline-list"></div>
   </div>
@@ -2466,6 +2524,15 @@ footer {
   <h2 class="section-title">Работа РП на неделю</h2>
   <p class="section-sub" id="wp-week-label">Загрузка и задачи по дням</p>
   <div id="weekly-plan"></div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════
+     2в: ЗАДАЧИ РП НА СЕГОДНЯ · по КСГ (.mpp)
+     ════════════════════════════════════════════════════════ -->
+<section class="kt-section" id="kt-section">
+  <h2 class="section-title" onclick="document.getElementById('kt-section').classList.toggle('collapsed')" title="Свернуть / развернуть">Задачи РП на сегодня · по КСГ<span class="kt-chev">▾</span></h2>
+  <div class="kt-summary" id="kt-summary"></div>
+  <div id="kt-body"></div>
 </section>
 
 <!-- ════════════════════════════════════════════════════════
@@ -2561,12 +2628,6 @@ footer {
   <div class="hero-content">
     <div class="hero-eyebrow">PMO-01 · Этап инициации</div>
     <h1 class="hero-title">Проектные <b>инициативы</b></h1>
-    <p class="hero-lead">
-      Воронка пред-проектных инициатив парка. Карточки инициатив (PMO-01.01) — первый шаг
-      в воронке, прежде чем инициатива превратится в Бриф (PMO-01.02), Бизнес-кейс (PMO-01.03)
-      и Устав проекта (PMO-01.04). На этом этапе оценивается стратегическое соответствие BSC
-      и потенциальный вклад в портфель.
-    </p>
     <div class="method-pills">
       <button class="btn-primary" id="btn-new-init">+ Новая инициатива</button>
       <div class="method-pill">PMO-01.01 · форма инициативы</div>
@@ -2603,41 +2664,18 @@ footer {
   <div class="hero-content">
     <div class="hero-eyebrow">P4 · Резерв портфеля</div>
     <h1 class="hero-title">Полный <b>бэклог</b> портфеля</h1>
-    <p class="hero-lead">
-      34 проекта в режиме резерва. Не активировать до отдельного решения Комитета по портфелю
-      (Регламент v1.2 §5.2). Приоритет автоматически P4, EVM не считается, бюджет —
-      ориентировочная оценка для воронки инвестиций.
-    </p>
   </div>
 </section>
 
-<!-- Фильтры -->
+<!-- Проекты в бэклоге -->
 <section>
-  <h2 class="section-title">Фильтры и поиск</h2>
-  <div class="filter-bar">
-    <div class="filter-search">
-      <input type="text" id="bl-search" placeholder="Поиск по названию проекта..." autocomplete="off">
+  <div class="bl-head-row">
+    <div class="bl-head-titles">
+      <h2 class="section-title">Проекты в бэклоге</h2>
+      <p class="section-sub" id="bl-count">9 проектов</p>
     </div>
-    <div class="filter-group" id="filter-pm">
-      <div class="filter-group-h">PM</div>
-      <div class="filter-chips" id="chips-pm"></div>
-    </div>
-    <div class="filter-group" id="filter-bsc">
-      <div class="filter-group-h">BSC-цель</div>
-      <div class="filter-chips" id="chips-bsc"></div>
-    </div>
-    <div class="filter-group" id="filter-type">
-      <div class="filter-group-h">Тип проекта</div>
-      <div class="filter-chips" id="chips-type"></div>
-    </div>
-    <button class="btn-reset" id="bl-reset">Сбросить фильтры</button>
+    <input type="text" id="bl-search" class="bl-head-search" placeholder="Поиск по названию…" autocomplete="off">
   </div>
-</section>
-
-<!-- Сетка карточек -->
-<section>
-  <h2 class="section-title">Проекты в бэклоге</h2>
-  <p class="section-sub" id="bl-count">9 проектов</p>
   <div id="backlog-grid-full"></div>
 </section>
 
@@ -3840,8 +3878,7 @@ function saveNewInit(){
 
 const BL_FILTERS = { pm: new Set(), bsc: new Set(), type: new Set(), search: '' };
 const BL_SORT = { col: 'id', dir: 1 };
-const BL_PM_CHANGES = {};
-const BL_STEPS = {}; // { [id]: { step: string, date: string } }
+const BL_EDITS = {}; // { [id]: { name, fields:{type,bsc,pm,year,priority} } }
 
 function getUniques(field){
   const set = new Set();
@@ -3850,6 +3887,7 @@ function getUniques(field){
 }
 
 function renderFilterChips(){
+  if(!document.getElementById('chips-pm')) return;
   const pms = getUniques('pm');
   const bscs = getUniques('bsc');
   const types = getUniques('type');
@@ -3891,13 +3929,20 @@ function renderBacklogFull(){
   const bscC  = {Клиенты:'bl-tag bl-tag-bsc-k',Развитие:'bl-tag bl-tag-bsc-r',Операции:'bl-tag bl-tag-bsc-o'};
   const pms   = ['—', ...DATA.managers.map(m => m.name)];
   const pmOpts = cur => pms.map(p=>`<option value="${esc(p)}"${p===(cur||'—')?' selected':''}>${esc(p)}</option>`).join('');
+  const BL_TYPES = ['Аттракцион','Инфраструктура','Перемещение','Событие','IT'];
+  const BL_BSCS  = ['Клиенты','Развитие','Операции','Финансы','Процессы'];
+  const BL_PRIOS = ['P1','P2','P3','P4'];
+  const optList = (arr,cur)=>arr.map(v=>`<option value="${esc(v)}"${v===cur?' selected':''}>${esc(v)}</option>`).join('');
+  const typeOpts = cur => optList(BL_TYPES, cur||'');
+  const bscOpts  = cur => optList(BL_BSCS, cur||'');
+  const prioOpts = cur => optList(BL_PRIOS, cur||'P4');
   const thH = (col, lbl, cls) => {
     const active = BL_SORT.col===col;
     const arrow  = active ? (BL_SORT.dir===1?'↑':'↓') : '↕';
     return `<th class="${cls||'bl-col-'+col}${active?' bl-sorted':''}" data-blcol="${col}">${lbl} <span style="opacity:.5;font-size:10px">${arrow}</span></th>`;
   };
 
-  const changedIds = [...new Set([...Object.keys(BL_PM_CHANGES), ...Object.keys(BL_STEPS)])];
+  const changedIds = Object.keys(BL_EDITS);
   const banner = changedIds.length
     ? `<div class="bl-save-banner show" id="bl-save-banner">
          <span>Несохранённые изменения: ${changedIds.length} строк</span>
@@ -3918,24 +3963,23 @@ function renderBacklogFull(){
       ${thH('name','Название','bl-col-name')}
       ${thH('type','Тип','bl-col-type')}
       ${thH('bsc','BSC','bl-col-bsc')}
+      ${thH('priority','Приоритет','bl-col-prio')}
       ${thH('pm','PM','bl-col-pm')}
-      <th class="bl-col-step">Следующий шаг</th>
-      <th class="bl-col-date">Дата</th>
+      ${thH('year','Год старта','bl-col-year')}
       <th class="bl-col-note">Примечание / контакт</th>
     </tr></thead>
     <tbody>
     ${sorted.map(b => {
-      const s = BL_STEPS[b.id] || {};
       return `
       <tr>
         <td><span class="bl-id-b">${b.id}</span></td>
         <td><span class="bl-nm">${esc(b.name)}</span></td>
-        <td><span class="${typeC[b.type]||'bl-tag'}">${esc(b.type||'—')}</span></td>
-        <td><span class="${bscC[b.bsc]||'bl-tag'}">${esc(b.bsc||'—')}</span></td>
-        <td><select class="bl-pm-sel${(!b.pm||b.pm==='—')?' unset':''}" data-blid="${b.id}" onchange="blPmChange(this)">${pmOpts(b.pm)}</select></td>
-        <td><input class="bl-step-input" type="text" placeholder="Добавить шаг…" value="${esc(s.step||'')}" data-blid="${b.id}" onchange="blStepChange(this,'step')"></td>
-        <td><input class="bl-step-input" type="date" value="${s.date||''}" data-blid="${b.id}" onchange="blStepChange(this,'date')"></td>
-        <td class="bl-note-cell" title="${esc(b.note||'')}">${esc(b.note)||'—'}</td>
+        <td><select class="bl-sel" data-blid="${b.id}" onchange="blFieldChange(this,'type')">${typeOpts(b.type)}</select></td>
+        <td><select class="bl-sel" data-blid="${b.id}" onchange="blFieldChange(this,'bsc')">${bscOpts(b.bsc)}</select></td>
+        <td><select class="bl-sel" data-blid="${b.id}" onchange="blPriorityChange(this)">${prioOpts(b.priority)}</select></td>
+        <td><select class="bl-pm-sel${(!b.pm||b.pm==='—')?' unset':''}" data-blid="${b.id}" onchange="blFieldChange(this,'pm')">${pmOpts(b.pm)}</select></td>
+        <td><input class="bl-year-input" type="number" min="2024" max="2035" step="1" placeholder="—" value="${b.year||''}" data-blid="${b.id}" onchange="blFieldChange(this,'year')"></td>
+        <td class="bl-note-cell">${b.note?`<span class="bl-note-text">${esc(b.note)}</span><span class="bl-note-full">${esc(b.note)}</span>`:'<span class="bl-note-text">—</span>'}</td>
       </tr>`;
     }).join('')}
     </tbody>
@@ -3952,70 +3996,100 @@ function renderBacklogFull(){
   });
 }
 
-function blPmChange(sel){
+function blRefreshBanner(){
+  const banner = document.getElementById('bl-save-banner');
+  if(!banner) return;
+  const cnt = Object.keys(BL_EDITS).length;
+  if(!cnt){ banner.className='bl-save-banner'; banner.innerHTML=''; return; }
+  banner.className = 'bl-save-banner show';
+  banner.innerHTML = `<span>Несохранённых изменений: ${cnt} строк</span>
+    <button class="bl-save-btn" onclick="blSaveChanges()">Сохранить изменения ↗</button>`;
+}
+
+function blFieldChange(ctrl, field){
+  const id  = +ctrl.dataset.blid;
+  const row = DATA.backlog.find(b => b.id === id);
+  if(!row) return;
+  let val = ctrl.value;
+  if(field === 'year') val = val ? String(parseInt(val,10)) : '';
+  row[field] = val;
+  if(field === 'pm') ctrl.className = 'bl-pm-sel' + ((!row.pm||row.pm==='—')?' unset':'');
+  if(!BL_EDITS[id]) BL_EDITS[id] = { name: row.name, fields:{} };
+  BL_EDITS[id].fields[field] = val;
+  blRefreshBanner();
+}
+
+function nextInitId(){
+  let mx = 0;
+  INITIATIVES.forEach(i => { const m=/INIT-(\d+)/.exec(i.id||''); if(m) mx=Math.max(mx,+m[1]); });
+  return 'INIT-' + String(mx+1).padStart(3,'0');
+}
+
+function blPriorityChange(sel){
   const id  = +sel.dataset.blid;
   const row = DATA.backlog.find(b => b.id === id);
   if(!row) return;
-  const prev = row.pm || '—';
-  row.pm = sel.value;
-  sel.className = 'bl-pm-sel' + ((!row.pm||row.pm==='—')?' unset':'');
-  BL_PM_CHANGES[id] = { name: row.name, from: prev, to: row.pm };
+  const newP = sel.value;
+  row.priority = newP;
+  if(newP === 'P4'){ blFieldChange(sel,'priority'); return; }
+  // Повышение приоритета → перенос в проектные инициативы на стадию «Идея»
+  INITIATIVES.unshift({
+    id: nextInitId(),
+    name: row.name,
+    author: (row.pm && row.pm !== '—') ? row.pm : 'Не назначен',
+    bsc: row.bsc || '',
+    type: row.type || '',
+    budget: null,
+    desc: row.note || 'Перенесено из бэклога при повышении приоритета.',
+    status: 'idea',
+    statusName: 'Идея',
+    created: new Date().toLocaleDateString('ru'),
+    priority: newP,
+    startYear: row.year || null,
+    fromBacklogId: id,
+  });
+  saveInitiatives(INITIATIVES);
+  const idx = DATA.backlog.findIndex(b => b.id === id);
+  if(idx >= 0) DATA.backlog.splice(idx,1);
+  delete BL_EDITS[id];
+  renderFunnel();
+  renderInitiatives();
+  renderFilterChips();
+  renderBacklogFull();
   const banner = document.getElementById('bl-save-banner');
   if(banner){
-    const ids = Object.keys(BL_PM_CHANGES);
     banner.className = 'bl-save-banner show';
-    banner.innerHTML = `<span>Изменён PM: ${ids.map(i=>`#${i} → ${BL_PM_CHANGES[i].to}`).join(' · ')}</span>
-      <button class="bl-save-btn" onclick="blSaveChanges()">Сохранить изменения ↗</button>`;
-  }
-}
-
-function blStepChange(inp, field){
-  const id = +inp.dataset.blid;
-  if(!BL_STEPS[id]) BL_STEPS[id] = {};
-  BL_STEPS[id][field] = inp.value;
-  const banner = document.getElementById('bl-save-banner');
-  if(banner){
-    const cnt = new Set([...Object.keys(BL_PM_CHANGES),...Object.keys(BL_STEPS)]).size;
-    banner.className = 'bl-save-banner show';
-    banner.innerHTML = `<span>Несохранённые изменения: ${cnt} строк</span>
-      <button class="bl-save-btn" onclick="blSaveChanges()">Сохранить изменения ↗</button>`;
+    banner.innerHTML = `<span>«${row.name}» → Проектные инициативы (Идея · ${newP}), удалено из бэклога.</span>
+      <button class="bl-save-btn" onclick="blSaveChanges()">Сохранить в файл ↗</button>`;
   }
 }
 
 function blSaveChanges(){
-  const pmParts = Object.entries(BL_PM_CHANGES)
-    .map(([id,c]) => `id ${id} PM→${c.to}`);
-  const stepParts = Object.entries(BL_STEPS)
-    .map(([id,s]) => `id ${id} шаг="${s.step||''}" дата="${s.date||''}"`);
-  const msg = [...pmParts, ...stepParts].join('; ');
-  sendPrompt('Сохрани изменения в DATA.backlog в index.html: ' + msg + '. Сделай git commit + push.');
+  const parts = Object.entries(BL_EDITS).map(([id,c]) =>
+    `id ${id} (${c.name}): ` + Object.entries(c.fields).map(([f,v])=>`${f}=${v||'—'}`).join(', '));
+  const moved = INITIATIVES.filter(i => i.fromBacklogId)
+    .map(i => `id ${i.fromBacklogId} → ${i.id} (Идея, ${i.priority||''})`);
+  if(moved.length) parts.push('Перенесено в инициативы: ' + moved.join('; '));
+  const msg = parts.join('; ') || 'нет';
+  sendPrompt('Сохрани изменения бэклога/инициатив в index.html: ' + msg + '. Обнови DATA.backlog (тип/BSC/PM/год/приоритет; удали перенесённые проекты) и DEMO_INITIATIVES (добавь новые идеи). Сделай git commit + push.');
 }
 
 function bindFilters(){
-  document.addEventListener('click', e => {
-    const chip = e.target.closest('.filter-chip');
-    if(!chip) return;
-    const group = chip.dataset.group;
-    const val = chip.dataset.val;
-    if(BL_FILTERS[group].has(val)) BL_FILTERS[group].delete(val);
-    else BL_FILTERS[group].add(val);
-    renderFilterChips();
-    renderBacklogFull();
-  });
-
-  document.getElementById('bl-search').addEventListener('input', e => {
-    BL_FILTERS.search = e.target.value;
-    renderBacklogFull();
-  });
-  document.getElementById('bl-reset').addEventListener('click', () => {
-    BL_FILTERS.pm.clear();
-    BL_FILTERS.bsc.clear();
-    BL_FILTERS.type.clear();
-    BL_FILTERS.search = '';
-    document.getElementById('bl-search').value = '';
-    renderFilterChips();
-    renderBacklogFull();
-  });
+  const search = document.getElementById('bl-search');
+  if(search){
+    search.addEventListener('input', e => {
+      BL_FILTERS.search = e.target.value;
+      renderBacklogFull();
+    });
+  }
+  const reset = document.getElementById('bl-reset');
+  if(reset){
+    reset.addEventListener('click', () => {
+      BL_FILTERS.search = '';
+      if(search) search.value = '';
+      renderBacklogFull();
+    });
+  }
 }
 
 // ════════════════════════════════════════════════════════
@@ -4396,6 +4470,65 @@ function handleHashRoute(){
   }
 }
 
+const KSG_TODAY = {"asOf": "02.06.2026", "rp": "Шалушкин Ю.В.", "projects": [{"id": 1, "name": "Suspended Coaster", "alias": "Путь Дракона", "rp": "Шалушкин Ю.В.", "count": 8, "tasks": [{"name": "Производство КМ. Ч21", "finish": "02.06.2026", "dur": 1.0, "bdur": 1.0, "dev": 0, "devdur": 0.0, "pct": 100}, {"name": "Установка рельсов. Ч4", "finish": "02.06.2026", "dur": 1.0, "bdur": 1.0, "dev": 8, "devdur": 0.0, "pct": 100}, {"name": "армирование стен. Ч1", "finish": "02.06.2026", "dur": 1.0, "bdur": 1.0, "dev": 4, "devdur": 0.0, "pct": 0}, {"name": "Отделка ТП. Ч9", "finish": "02.06.2026", "dur": 1.0, "bdur": 1.0, "dev": -5, "devdur": 0.0, "pct": 0}, {"name": "Установка электропроводки. Ч5", "finish": "02.06.2026", "dur": 1.0, "bdur": 1.0, "dev": -6, "devdur": 0.0, "pct": 0}, {"name": "Выборка грунта под организацию дорожек. Ч5", "finish": "02.06.2026", "dur": 1.0, "bdur": null, "dev": null, "devdur": null, "pct": 0}, {"name": "Вывоз грунта. Ч2", "finish": "02.06.2026", "dur": 1.0, "bdur": null, "dev": null, "devdur": null, "pct": 0}, {"name": "Укладка геотекстиля. Ч2", "finish": "02.06.2026", "dur": 1.0, "bdur": null, "dev": null, "devdur": null, "pct": 0}]}, {"id": 2, "name": "Spider", "alias": "Паук", "rp": "Шалушкин Ю.В.", "count": 1, "tasks": [{"name": "Пусконаладка", "finish": "03.06.2026", "dur": 2.0, "bdur": 4.0, "dev": 7, "devdur": -2.0, "pct": 0}]}, {"id": 3, "name": "Shuttle Coaster", "alias": "Бумеранг", "rp": "Шалушкин Ю.В.", "count": 5, "tasks": [{"name": "Установка электропроводки. Ч14", "finish": "02.06.2026", "dur": 1.0, "bdur": 1.0, "dev": -1, "devdur": 0.0, "pct": 100}, {"name": "Выборка грунта под организацию дорожек. Ч2", "finish": "02.06.2026", "dur": 1.0, "bdur": 0.0, "dev": null, "devdur": 1.0, "pct": 0}, {"name": "Выборка грунта под траншеи кабельных линий. Ч2", "finish": "02.06.2026", "dur": 1.0, "bdur": 0.0, "dev": null, "devdur": 1.0, "pct": 0}, {"name": "Вывоз грунта. Ч1", "finish": "02.06.2026", "dur": 1.0, "bdur": 0.0, "dev": null, "devdur": 1.0, "pct": 0}, {"name": "Производство КМ. Ч20", "finish": "08.06.2026", "dur": 12.0, "bdur": 1.0, "dev": 11, "devdur": 11.0, "pct": 100}]}, {"id": 4, "name": "Super Spinning", "alias": "Вихрь", "rp": "Шалушкин Ю.В.", "count": 5, "tasks": [{"name": "Установка электропроводки. Ч5", "finish": "02.06.2026", "dur": 1.0, "bdur": 1.0, "dev": 2, "devdur": 0.0, "pct": 100}, {"name": "Навес. Ч7", "finish": "02.06.2026", "dur": 1.0, "bdur": 1.0, "dev": 2, "devdur": 0.0, "pct": 0}, {"name": "Вывоз грунта. Ч2", "finish": "02.06.2026", "dur": 1.0, "bdur": null, "dev": null, "devdur": null, "pct": 0}, {"name": "Прокладка кабелей и коммуникаций. Ч1", "finish": "02.06.2026", "dur": 1.0, "bdur": 1.0, "dev": -2, "devdur": 0.0, "pct": 0}, {"name": "Отсыпка дорожек щебнем фракция 5-20. Ч1", "finish": "02.06.2026", "dur": 1.0, "bdur": 1.0, "dev": 5, "devdur": 0.0, "pct": 0}]}, {"id": 5, "name": "Double Heart", "alias": "Сердце Москвы", "rp": "Шалушкин Ю.В.", "count": 4, "tasks": [{"name": "Установка колонн Level 1 — левая сторона", "finish": "02.06.2026", "dur": 5.0, "bdur": 5.0, "dev": 0, "devdur": 0.0, "pct": 100}, {"name": "Установка колонн Level 1 — правая сторона", "finish": "02.06.2026", "dur": 5.0, "bdur": 5.0, "dev": 0, "devdur": 0.0, "pct": 100}, {"name": "Установка треков T005-T006-T007", "finish": "04.06.2026", "dur": 2.0, "bdur": 2.0, "dev": 0, "devdur": 0.0, "pct": 0}, {"name": "Установка треков T033-T034-T035", "finish": "04.06.2026", "dur": 2.0, "bdur": 2.0, "dev": 0, "devdur": 0.0, "pct": 0}]}, {"id": 6, "name": "Sky Screamer", "alias": "Смерч", "rp": "Шалушкин Ю.В.", "count": 3, "tasks": [{"name": "ПНР. Ч7", "finish": "02.06.2026", "dur": 21.0, "bdur": 1.0, "dev": 17, "devdur": 20.0, "pct": 100}, {"name": "Отсыпка дорожек отсевом. Ч3", "finish": "02.06.2026", "dur": 1.0, "bdur": 1.0, "dev": 0, "devdur": 0.0, "pct": 0}, {"name": "Засевание газона (гидропосев)", "finish": "02.06.2026", "dur": 1.0, "bdur": 1.0, "dev": 0, "devdur": 0.0, "pct": 0}]}]};
+
+// ── РЕНДЕР: Задачи РП на сегодня по КСГ ──
+function renderKsgToday(){
+  const root = document.getElementById('kt-body');
+  if(!root) return;
+  const projs = KSG_TODAY.projects.filter(p => p.count > 0);
+  const all = projs.flatMap(p => p.tasks);
+  const total = all.length;
+  const late = all.filter(t => t.dev != null && t.dev > 0).length;
+  const ahead = all.filter(t => t.dev != null && t.dev < 0).length;
+  const done = all.filter(t => t.pct === 100).length;
+
+  const sumEl = document.getElementById('kt-summary');
+  if(sumEl) sumEl.innerHTML =
+    '<span class="kt-chip s"><b>'+total+'</b> задач</span>'+
+    '<span class="kt-chip"><b>'+projs.length+'</b> проектов</span>'+
+    '<span class="kt-chip g"><b>'+done+'</b> завершено</span>'+
+    '<span class="kt-chip r"><b>'+late+'</b> с просрочкой</span>'+
+    '<span class="kt-chip g"><b>'+ahead+'</b> с опережением</span>';
+
+  root.innerHTML = projs.map(p => {
+    const rows = p.tasks.map(t => {
+      // отклонение по дате окончания
+      let dev;
+      if(t.dev == null) dev = '<span class="kt-badge kt-dev-x">нет плана</span>';
+      else if(t.dev > 0) dev = '<span class="kt-badge kt-dev-r">+'+t.dev+' дн</span>';
+      else if(t.dev < 0) dev = '<span class="kt-badge kt-dev-g">−'+Math.abs(t.dev)+' дн</span>';
+      else dev = '<span class="kt-badge kt-dev-n">0 дн</span>';
+      // трудоёмкость факт/план + пометка отклонения длительности
+      const durTxt = (t.dur==null?'—':(Number.isInteger(t.dur)?t.dur:t.dur.toFixed(1)));
+      const bdurTxt = (t.bdur==null?'—':(Number.isInteger(t.bdur)?t.bdur:t.bdur.toFixed(1)));
+      let eff = '<b>'+durTxt+'</b> <span class="pl">/ '+bdurTxt+' дн</span>';
+      // %
+      let pcls = t.pct===100?'kt-pct-100':(t.pct>0?'kt-pct-mid':'kt-pct-0');
+      const pct = '<span class="kt-pct '+pcls+'">'+t.pct+'%</span>';
+      return '<tr>'+
+        '<td class="kt-task">'+esc(t.name)+'</td>'+
+        '<td class="kt-fin">'+esc(t.finish)+'</td>'+
+        '<td class="kt-eff num">'+eff+'</td>'+
+        '<td class="num">'+dev+'</td>'+
+        '<td class="num">'+pct+'</td>'+
+      '</tr>';
+    }).join('');
+    return '<div class="kt-proj">'+
+      '<div class="kt-phead" onclick="location.hash=\'#/project/'+p.id+'\'">'+
+        '<span class="kt-pname">'+esc(p.name)+'</span>'+
+        '<span class="kt-palias">'+esc(p.alias)+'</span>'+
+        '<span class="kt-prp">РП: '+esc(p.rp)+'</span>'+
+        '<span class="kt-pcount">'+p.count+' задач</span>'+
+      '</div>'+
+      '<table class="kt-tbl"><thead><tr>'+
+        '<th>Задача</th><th>Оконч.</th><th class="num">Трудоёмкость факт/план</th>'+
+        '<th class="num">Отклонение</th><th class="num">%</th>'+
+      '</tr></thead><tbody>'+rows+'</tbody></table>'+
+    '</div>';
+  }).join('');
+}
+
 // ════════════════════════════════════════════════════════
 // ИНИЦИАЛИЗАЦИЯ
 // ════════════════════════════════════════════════════════
@@ -4405,6 +4538,7 @@ renderRag();
 renderPhases();
 renderTimeline();
 renderWeeklyPlan();
+renderKsgToday();
 renderPmSections();
 renderRiskMatrices();
 renderTopRisks();
@@ -4471,6 +4605,17 @@ function phModalClose() {
 document.addEventListener('keydown', e => { if(e.key==='Escape') phModalClose(); });
 
 </script>
-
 <!-- Phase drill-down modal -->
-<div class=
+<div class="ph-modal-ov" id="ph-modal-ov" onclick="if(event.target===this)phModalClose()">
+  <div class="ph-modal">
+    <div class="ph-modal-head">
+      <span class="ph-modal-title" id="ph-modal-title"></span>
+      <span class="ph-modal-count" id="ph-modal-count"></span>
+      <button class="ph-modal-close" onclick="phModalClose()">✕</button>
+    </div>
+    <div id="ph-modal-body"></div>
+  </div>
+</div>
+
+</body>
+</html>
