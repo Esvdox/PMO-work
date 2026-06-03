@@ -578,6 +578,31 @@ section + section {
 .waffle-cell.wa { background: var(--warn); }
 .waffle-cell.wr { background: var(--bad); }
 .waffle-cell.wn { background: var(--t4); opacity: .4; }
+/* RAG: крупные плашки-статусы + свод проект→риски */
+.rag-cards { display:grid; grid-template-columns:repeat(4,1fr); gap:.6rem; margin:var(--sp-1) 0; }
+.rag-card { cursor:pointer; border:1px solid var(--ln2); border-left-width:5px; border-radius:.8rem; padding:.7rem .8rem; background:var(--bg-2); text-align:left; transition:transform .12s, box-shadow .12s; font-family:inherit; }
+.rag-card:hover { transform:translateY(-2px); box-shadow:var(--shadow-1); }
+.rag-card.active { box-shadow:0 0 0 2px var(--sky); }
+.rag-card .rc-num { font-size:30px; font-weight:900; line-height:1; font-variant-numeric:tabular-nums; }
+.rag-card .rc-lbl { font-size:13px; font-weight:700; color:var(--t2); margin-top:.35rem; }
+.rag-card.g { border-left-color:var(--ok); } .rag-card.g .rc-num { color:var(--ok); }
+.rag-card.a { border-left-color:var(--warn); } .rag-card.a .rc-num { color:var(--warn); }
+.rag-card.r { border-left-color:var(--bad); } .rag-card.r .rc-num { color:var(--bad); }
+.rag-card.n { border-left-color:var(--t4); } .rag-card.n .rc-num { color:var(--t3); }
+.rag-detail { margin-top:var(--sp-1); }
+.rag-detail-hint { font-size:13px; color:var(--t3); padding:.5rem .2rem; }
+.rag-dp { border:1px solid var(--ln); border-radius:.6rem; padding:.6rem .8rem; margin-bottom:.5rem; background:var(--bg-2); }
+.rag-dp-head { display:flex; align-items:center; gap:.5rem; flex-wrap:wrap; }
+.rag-dp-name { font-size:15px; font-weight:800; color:var(--t1); cursor:pointer; }
+.rag-dp-name:hover { color:var(--sky-2); }
+.rag-dp-pm { font-size:12px; color:var(--t3); }
+.rag-dp-rcount { margin-left:auto; font-size:12px; font-weight:800; padding:.15rem .55rem; border-radius:.4rem; background:var(--bad-dim); color:var(--bad); white-space:nowrap; }
+.rag-dp-rcount.zero { background:var(--ok-dim); color:var(--ok); }
+.rag-dp-risks { margin-top:.45rem; display:flex; flex-direction:column; gap:.35rem; }
+.rag-dp-risk { font-size:12px; color:var(--t2); display:flex; gap:.5rem; align-items:baseline; line-height:1.35; }
+.rag-dp-risk .rr-sc { font-weight:800; color:var(--bad); min-width:1.5rem; }
+.rag-dp-risk .rr-emv { margin-left:auto; font-weight:700; color:var(--warn); white-space:nowrap; }
+@media(max-width:520px){ .rag-cards{ grid-template-columns:repeat(2,1fr); } }
 
 .rag-legend {
   display: flex;
@@ -2385,6 +2410,10 @@ footer {
 .kt-chev { position:absolute; right:0; top:50%; transform:translateY(-50%); font-size:13px; color:var(--t3); transition:transform .2s; }
 .kt-section.collapsed .kt-chev { transform:translateY(-50%) rotate(-90deg); }
 .kt-section.collapsed #kt-body { display:none; }
+.risk-section .section-title { cursor:pointer; user-select:none; position:relative; padding-right:1.6rem; display:inline-block; }
+.risk-section.collapsed .kt-chev { transform:translateY(-50%) rotate(-90deg); }
+.risk-section.collapsed .risk-grid { display:none; }
+.risk-summary { margin-top:.2rem; }
 .kt-summary{display:flex;flex-wrap:wrap;gap:.6rem;margin:.2rem 0 1.1rem}
 .kt-chip{display:inline-flex;align-items:baseline;gap:.4rem;background:var(--bg-2);border:1px solid var(--bg-4);border-radius:.6rem;padding:.45rem .8rem;font-size:14px;color:var(--t2)}
 .kt-chip b{font-size:19px;font-weight:800;color:var(--t1);font-variant-numeric:tabular-nums}
@@ -2500,8 +2529,8 @@ footer {
       </div>
       <div class="panel">
         <div class="panel-h">RAG · Состояние активных проектов</div>
-        <div class="waffle" id="rag-waffle"></div>
-        <div class="rag-legend" id="rag-legend"></div>
+        <div class="rag-cards" id="rag-cards"></div>
+        <div class="rag-detail" id="rag-detail"></div>
       </div>
     </div>
     <div class="portfolio-side">
@@ -2547,9 +2576,10 @@ footer {
 <!-- ════════════════════════════════════════════════════════
      4: КАРТА РИСКОВ
      ════════════════════════════════════════════════════════ -->
-<section>
-  <h2 class="section-title">Карта рисков портфеля</h2>
+<section class="risk-section" id="risk-section">
+  <h2 class="section-title" onclick="document.getElementById('risk-section').classList.toggle('collapsed')" title="Свернуть / развернуть">Карта рисков портфеля<span class="kt-chev">▾</span></h2>
   <p class="section-sub" id="risks-sub">Тепловая матрица 5×5 · только активные проекты · 02_Риски v2.9</p>
+  <div class="kt-summary risk-summary" id="risk-summary"></div>
 
   <div class="risk-grid">
     <div>
@@ -3157,34 +3187,62 @@ function renderHealth(){
 }
 
 // ── РЕНДЕР: RAG-waffle ──
+let RAG_SEL = null;
+let RAG_GROUPS = { g:[], a:[], r:[], n:[] };
+function ragCat(p){
+  const g = p.rag;
+  if(g === 'ahead' || g === 'ontime') return 'g';
+  if(g === 'risky') return 'a';
+  if(g === 'late')  return 'r';
+  return 'n';
+}
 function renderRag(){
-  // Вычисляем RAG динамически из активных проектов
   const active = allProjects().filter(p => p.status === 'Активный');
-  const r = {
-    ahead:  active.filter(p => p.rag === 'ahead').length,
-    ontime: active.filter(p => p.rag === 'ontime').length,
-    risky:  active.filter(p => p.rag === 'risky').length,
-    late:   active.filter(p => p.rag === 'late').length,
-    noData: active.filter(p => !p.rag || p.rag === 'no-data').length,
-  };
-  const wEl = document.getElementById('rag-waffle');
-  const lEl = document.getElementById('rag-legend');
-
-  const items = [
-    ...Array(r.ahead || 0).fill('wg'),
-    ...Array(r.ontime || 0).fill('wg'),
-    ...Array(r.risky || 0).fill('wa'),
-    ...Array(r.late || 0).fill('wr'),
-    ...Array(r.noData || 0).fill('wn'),
-  ];
-  wEl.innerHTML = items.map(c => `<div class="waffle-cell ${c}"></div>`).join('');
-
-  lEl.innerHTML = `
-    <div class="rag-leg-item"><div class="rag-dot g"></div>В графике: <span class="rag-num">${(r.ahead||0)+(r.ontime||0)}</span></div>
-    <div class="rag-leg-item"><div class="rag-dot a"></div>Зона риска: <span class="rag-num">${r.risky||0}</span></div>
-    <div class="rag-leg-item"><div class="rag-dot r"></div>Просрочка: <span class="rag-num">${r.late||0}</span></div>
-    <div class="rag-leg-item"><div class="rag-dot n"></div>Нет данных: <span class="rag-num">${r.noData||0}</span></div>
-  `;
+  RAG_GROUPS = { g:[], a:[], r:[], n:[] };
+  active.forEach(p => RAG_GROUPS[ragCat(p)].push(p));
+  const defs = [['g','В графике'],['a','В зоне риска'],['r','Просрочка'],['n','Нет данных']];
+  const el = document.getElementById('rag-cards');
+  if(el){
+    el.innerHTML = defs.map(([k,lbl]) =>
+      `<button class="rag-card ${k}${RAG_SEL===k?' active':''}" data-ragk="${k}" onclick="ragSelect('${k}')">
+         <div class="rc-num">${RAG_GROUPS[k].length}</div>
+         <div class="rc-lbl">${lbl}</div>
+       </button>`).join('');
+  }
+  renderRagDetail();
+}
+function ragSelect(k){ RAG_SEL = (RAG_SEL === k) ? null : k; renderRag(); }
+function renderRagDetail(){
+  const el = document.getElementById('rag-detail');
+  if(!el) return;
+  const labels = { g:'В графике', a:'В зоне риска', r:'Просрочка', n:'Нет данных' };
+  if(!RAG_SEL){
+    el.innerHTML = '<div class="rag-detail-hint">Нажмите на статус, чтобы увидеть проекты и их риски.</div>';
+    return;
+  }
+  const list = RAG_GROUPS[RAG_SEL] || [];
+  if(!list.length){
+    el.innerHTML = '<div class="rag-detail-hint">Нет проектов в статусе «' + labels[RAG_SEL] + '».</div>';
+    return;
+  }
+  el.innerHTML = list.map(p => {
+    const det = PROJECTS_DETAIL[p.id] || {};
+    const risks = (det.risks_top || []).slice().sort((a,b) => (b.score||0)-(a.score||0));
+    const activeR = (det.risks_active != null) ? det.risks_active : risks.filter(r => r.status === 'Активный').length;
+    const rc = activeR > 0 ? (activeR + ' активных рисков') : 'нет активных рисков';
+    const riskRows = risks.length
+      ? risks.slice(0,3).map(r =>
+          `<div class="rag-dp-risk"><span class="rr-sc">${r.score||''}</span><span>${esc(r.desc||'')}</span><span class="rr-emv">EMV ${(r.emv||0).toLocaleString('ru',{maximumFractionDigits:1})} млн</span></div>`).join('')
+      : '<div class="rag-dp-risk" style="color:var(--t3)">Риски не зафиксированы</div>';
+    return `<div class="rag-dp">
+      <div class="rag-dp-head">
+        <span class="rag-dp-name" onclick="location.hash='#/project/${p.id}'">#${p.id} · ${esc(p.name)}</span>
+        <span class="rag-dp-pm">${esc(p.pmFio||'')}</span>
+        <span class="rag-dp-rcount${activeR>0?'':' zero'}">${rc}</span>
+      </div>
+      <div class="rag-dp-risks">${riskRows}</div>
+    </div>`;
+  }).join('');
 }
 
 // ── РЕНДЕР: Фазы по PMBOK ──
@@ -3427,10 +3485,26 @@ function renderRiskMatrices(){
 
     const pm = pmNames[det.pm_id] || det.pm_fio || '';
     const isSusp = proj.status === 'Приостановлен';
-    return { pm, name:proj.name, isSusp, activeR, identified, burned, realized, reserve, mx };
+    const emv = risks.reduce((s,r) => s + (r.emv||0), 0);
+    return { pm, name:proj.name, isSusp, activeR, identified, burned, realized, reserve, mx, risksTotal: det.risks_total||risks.length, emv };
   }).filter(Boolean);
 
   cards.sort((a,b) => b.reserve - a.reserve);
+
+  const rsum = {
+    proj: cards.length,
+    risks: cards.reduce((s,c)=>s+(c.risksTotal||0),0),
+    active: cards.reduce((s,c)=>s+(c.activeR||0),0),
+    crit: cards.filter(c=>c.activeR>=3).length,
+    emv: cards.reduce((s,c)=>s+(c.emv||0),0),
+  };
+  const rsumEl = document.getElementById('risk-summary');
+  if(rsumEl) rsumEl.innerHTML =
+    `<span class="kt-chip s"><b>${rsum.proj}</b> проектов</span>`+
+    `<span class="kt-chip"><b>${rsum.risks}</b> рисков</span>`+
+    `<span class="kt-chip r"><b>${rsum.active}</b> активных</span>`+
+    `<span class="kt-chip r"><b>${rsum.crit}</b> критич.</span>`+
+    `<span class="kt-chip"><b>${rsum.emv.toLocaleString('ru',{maximumFractionDigits:1})}</b> Σ EMV млн</span>`;
 
   el.innerHTML = cards.map(p => {
     let cells = '<div class="hm-ax"></div>';
