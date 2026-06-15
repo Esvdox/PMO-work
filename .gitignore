@@ -15,3 +15,6 @@ desktop.ini
 
 # Git lock-файлы (Cowork-баг на Windows)
 .git/index.lock
+
+# Локальные инструменты (содержат локальные пути к .mpp; не для публикации)
+scripts/
